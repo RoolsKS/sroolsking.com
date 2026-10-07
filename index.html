@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SRoolsKing</title>
-<meta name="description" content="SRoolsKing, Roblox builder at Golden Eagle Studios. 361.1M visits across tycoons like Ultimate Mansion Tycoon and House Tycoon 2. Games, YouTube, Twitch and contact.">
+<meta name="description" content="SRoolsKing, Roblox builder at Golden Eagle Studios. 361.2M visits across tycoons like Ultimate Mansion Tycoon and House Tycoon 2. Games, YouTube, Twitch and contact.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Schibsted+Grotesk:wght@400;500;600&display=swap">
@@ -192,12 +192,12 @@ body{background:var(--bg)}
   </header>
 
   <dl class="strip" aria-label="Totals across every game">
-    <div><dd id="t-visits">361,140,003</dd><dt>Total visits</dt></div>
-    <div><dd id="t-favs">503,060</dd><dt>Favorites</dt></div>
+    <div><dd id="t-visits">361,218,903</dd><dt>Total visits</dt></div>
+    <div><dd id="t-favs">508,968</dd><dt>Favorites</dt></div>
     <div><dd>13</dd><dt>Games</dt></div>
     <div><dd>2020</dd><dt>Building since</dt></div>
   </dl>
-  <div class="split"><span><b id="t-own">25,043,262</b> on my own games</span><span><b id="t-worked">336,096,741</b> on House Tycoon 2</span><span><span class="dot" id="dot"></span><span id="live-text">Stats as of Oct 7, 2026</span></span></div>
+  <div class="split"><span><b id="t-own">25,122,162</b> on my own games, incl. unlisted projects</span><span><b id="t-worked">336,096,741</b> on House Tycoon 2</span><span><span class="dot" id="dot"></span><span id="live-text">Stats as of Oct 7, 2026</span></span></div>
 
   <section id="games">
     <div class="sec"><h2>New</h2><span class="note">In beta, updated often</span></div>
@@ -410,6 +410,7 @@ body{background:var(--bg)}
   var OWN = [10767645246, 10345791932, 2101240674, 4592957519, 3482493471, 4201850178, 2533980161, 9530317138, 2838525435, 1863305565, 3250974283, 3291101795], WORKED = [3746418487];
   var YT_ID = "UCxVNuXOtvIn214EDRwgAgPQ", YT_API_KEY = "";   /* optional: a YouTube Data API key makes the YouTube numbers official */
   var TW_LOGIN = "sroolsking";
+  var UNLISTED_VISITS = 78900, UNLISTED_FAVS = 5908;   /* private and test projects, counted but not listed */
   var fmt = function(x){ return Number(x).toLocaleString("en-US"); };
   var get = function(u, asText){ return fetch(u).then(function(r){ return r.ok ? (asText ? r.text() : r.json()) : null; }).catch(function(){ return null; }); };
   function set(sel, v){ var el = root.querySelector(sel); if (el && v != null) el.textContent = fmt(v); }
@@ -433,6 +434,7 @@ body{background:var(--bg)}
       favs += d.favoritedCount;
     });
     if (gr.data.length === OWN.length + WORKED.length){
+      own += UNLISTED_VISITS; favs += UNLISTED_FAVS;
       set("#t-visits", own + worked); set("#t-favs", favs); set("#t-own", own); set("#t-worked", worked);
     }
     if (th && th.data) th.data.forEach(function(t){

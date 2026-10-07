@@ -61,8 +61,11 @@ def compact(x):
     return str(x)
 def esc(s): return html.escape(s, quote=True)
 
-own_visits = sum(g["visits"] for g in GAMES)
-own_favs = sum(g["favs"] for g in GAMES)
+# Private / unlisted projects (test places, unreleased games) as of the snapshot date. Counted in the totals, not listed.
+UNLISTED_VISITS = 78900
+UNLISTED_FAVS = 5908
+own_visits = sum(g["visits"] for g in GAMES) + UNLISTED_VISITS
+own_favs = sum(g["favs"] for g in GAMES) + UNLISTED_FAVS
 all_visits = own_visits + sum(g["visits"] for g in WORKED_ON)
 all_favs = own_favs + sum(g["favs"] for g in WORKED_ON)
 
@@ -304,7 +307,7 @@ BODY = f'''<div id="srk">
     <div><dd>{len(GAMES) + len(WORKED_ON)}</dd><dt>Games</dt></div>
     <div><dd>2020</dd><dt>Building since</dt></div>
   </dl>
-  <div class="split"><span><b id="t-own">{n(own_visits)}</b> on my own games</span><span><b id="t-worked">{n(w["visits"])}</b> on House Tycoon 2</span><span><span class="dot" id="dot"></span><span id="live-text">Stats as of {SNAPSHOT}</span></span></div>
+  <div class="split"><span><b id="t-own">{n(own_visits)}</b> on my own games, incl. unlisted projects</span><span><b id="t-worked">{n(w["visits"])}</b> on House Tycoon 2</span><span><span class="dot" id="dot"></span><span id="live-text">Stats as of {SNAPSHOT}</span></span></div>
 
   <section id="games">
     <div class="sec"><h2>New</h2><span class="note">In beta, updated often</span></div>
@@ -377,6 +380,7 @@ JS = r"""
   var OWN = %s, WORKED = %s;
   var YT_ID = %s, YT_API_KEY = "";   /* optional: a YouTube Data API key makes the YouTube numbers official */
   var TW_LOGIN = %s;
+  var UNLISTED_VISITS = %s, UNLISTED_FAVS = %s;   /* private and test projects, counted but not listed */
   var fmt = function(x){ return Number(x).toLocaleString("en-US"); };
   var get = function(u, asText){ return fetch(u).then(function(r){ return r.ok ? (asText ? r.text() : r.json()) : null; }).catch(function(){ return null; }); };
   function set(sel, v){ var el = root.querySelector(sel); if (el && v != null) el.textContent = fmt(v); }
@@ -400,6 +404,7 @@ JS = r"""
       favs += d.favoritedCount;
     });
     if (gr.data.length === OWN.length + WORKED.length){
+      own += UNLISTED_VISITS; favs += UNLISTED_FAVS;
       set("#t-visits", own + worked); set("#t-favs", favs); set("#t-own", own); set("#t-worked", worked);
     }
     if (th && th.data) th.data.forEach(function(t){
@@ -436,7 +441,7 @@ JS = r"""
   });
 })();
 </script>
-""" % (json.dumps([g["u"] for g in GAMES]), json.dumps([g["u"] for g in WORKED_ON]), json.dumps(YT["channel_id"]), json.dumps(TW["login"]))
+""" % (json.dumps([g["u"] for g in GAMES]), json.dumps([g["u"] for g in WORKED_ON]), json.dumps(YT["channel_id"]), json.dumps(TW["login"]), UNLISTED_VISITS, UNLISTED_FAVS)
 
 FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Schibsted+Grotesk:wght@400;500;600&display=swap">'
 HEAD = f'<title>SRoolsKing</title>\n<meta name="description" content="SRoolsKing, Roblox builder at Golden Eagle Studios. {compact(all_visits)} visits across tycoons like Ultimate Mansion Tycoon and House Tycoon 2. Games, YouTube, Twitch and contact.">\n{FONTS}\n<style>{CSS}</style>'
