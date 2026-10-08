@@ -330,7 +330,7 @@ dc_icon = f'<svg viewBox="0 0 24 24" aria-hidden="true">{ICONS["Discord"]}</svg>
 def topbar():
     return f'''  <div class="topbar"><div class="container">
     <span class="tb-left">{HAT}Founder · Golden Eagle Studios · Peregrine Falcon Studios · FTB · Honneur</span>
-    <span class="tb-right"><a href="{DISCORD}"{EXT}>Discord</a><a href="{YT["url"]}"{EXT}>YouTube</a><span>Brooklyn, NY</span></span>
+    <span class="tb-right"><a href="{DISCORD}"{EXT}>Discord</a><a href="{YT["url"]}"{EXT}>YouTube</a><a href="{TW["url"]}"{EXT}>Twitch</a></span>
   </div></div>'''
 
 def nav(links, cta_href, cta_html, home="#top"):
@@ -397,7 +397,7 @@ def footer():
       <div class="foot">
         <div class="foot-brand">
           <a class="brand" href="index.html">{HAT}<span><b>SROOLSKING</b><small>MEDIA · GAMES</small></span></a>
-          <p>Founder of Golden Eagle Studios, Peregrine Falcon Studios, FTB and Honneur. Roblox tycoons played {compact(all_visits)} times, from Brooklyn, NY.</p>
+          <p>Founder of Golden Eagle Studios, Peregrine Falcon Studios, FTB and Honneur. Roblox tycoons played {compact(all_visits)} times.</p>
           <div class="socials">
             <a href="{YT["url"]}"{EXT} aria-label="YouTube"><svg viewBox="0 0 24 24">{YT_SVG}</svg></a>
             <a href="{TW["url"]}"{EXT} aria-label="Twitch"><svg viewBox="0 0 24 24">{TW_SVG}</svg></a>
@@ -454,7 +454,7 @@ HOME_BODY = f'''<div id="srk">
 
 {nav([("Watch","#watch"),("Follow","#follow"),("Roblox","roblox.html"),("Contact","#contact")], YT["url"], f"{yt_icon} Subscribe")}
 
-{hero("Brooklyn, NY · Creator &amp; game builder", 'I build video games.<br><span class="gold">Watch it happen.</span>', home_para, home_btns, home_trust)}
+{hero("Creator &amp; game builder · Since 2020", 'I build video games.<br><span class="gold">Watch it happen.</span>', home_para, home_btns, home_trust)}
 
   <section class="band light" id="watch"><div class="container">
     <div class="head">
