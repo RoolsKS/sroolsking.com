@@ -124,7 +124,7 @@ body{background:var(--bg)}
 #srk .worked .big small{display:block;font:400 14px/1.4 var(--body);color:var(--muted);letter-spacing:0;margin-top:6px}
 
 /* Watch */
-#srk .tiles{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+#srk .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
 #srk .tile{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:22px 24px;border-radius:18px;background:var(--panel);border:1px solid var(--line);transition:transform .15s}
 #srk a.tile:hover{transform:translateY(-2px)}
 #srk .tile .ic{width:48px;height:48px;border-radius:12px;display:grid;place-items:center}
@@ -176,9 +176,9 @@ body{background:var(--bg)}
 
   <header class="hero" id="top">
     <div class="hero-copy">
-      <span class="eyebrow">Roblox builder · Golden Eagle Studios · Brooklyn, NY</span>
+      <span class="eyebrow">Roblox builder · Brooklyn, NY</span>
       <h1>I build Roblox tycoons.</h1>
-      <p class="lede">Twelve games of my own since 2020, from <b>Ultimate Modern House Tycoon</b> to <b>Ultimate Mansion Tycoon</b>, and part of the team behind <b>House Tycoon 2</b>.</p>
+      <p class="lede">Founder of <b>Golden Eagle Studios</b> and <b>Peregrine Falcon Studios</b>. Twelve games of my own since 2020, from <b>Ultimate Modern House Tycoon</b> to <b>Ultimate Mansion Tycoon</b>, and part of the team behind <b>House Tycoon 2</b>.</p>
       <div class="cta">
         <a class="btn" href="https://www.roblox.com/games/127633247396147" target="_blank" rel="noopener">Play the latest <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg></a>
         <a class="btn ghost" href="#watch">Watch</a>
@@ -372,12 +372,18 @@ body{background:var(--bg)}
   </section>
 
   <section id="watch">
-    <div class="sec"><h2>Watch</h2><span class="note">Dev logs, builds and live sessions</span></div>
+    <div class="sec"><h2>Watch</h2><span class="note">Dev logs, builds, live sessions and FTB</span></div>
     <div class="tiles">
       <a class="tile" href="https://www.youtube.com/@sroolsking" target="_blank" rel="noopener">
         <span class="ic" style="background:#FF0033"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 7.5a3 3 0 00-2.1-2.1C19 5 12 5 12 5s-7 0-8.9.4A3 3 0 001 7.5 31 31 0 00.6 12a31 31 0 00.4 4.5 3 3 0 002.1 2.1C5 19 12 19 12 19s7 0 8.9-.4a3 3 0 002.1-2.1 31 31 0 00.4-4.5 31 31 0 00-.4-4.5zM9.8 15.1V8.9l5.4 3.1z"/></svg></span>
         <span class="t"><b>YouTube</b><span>@sroolsking · since Jan 2020</span>
           <span class="stats"><span><b id="yt-subs">986</b> subscribers</span><span><b id="yt-videos">151</b> videos</span><span><b id="yt-views">349,226</b> views</span></span></span>
+        <span class="arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="tile" href="https://www.youtube.com/@FTBVision" target="_blank" rel="noopener">
+        <span class="ic" style="background:#FF0033"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 7.5a3 3 0 00-2.1-2.1C19 5 12 5 12 5s-7 0-8.9.4A3 3 0 001 7.5 31 31 0 00.6 12a31 31 0 00.4 4.5 3 3 0 002.1 2.1C5 19 12 19 12 19s7 0 8.9-.4a3 3 0 002.1-2.1 31 31 0 00.4-4.5 31 31 0 00-.4-4.5zM9.8 15.1V8.9l5.4 3.1z"/></svg></span>
+        <span class="t"><b>FTB</b><span>@FTBVision · Founder, director and manager</span>
+          <span class="stats"><span><b id="ftb-subs">125</b> subscribers</span><span><b id="ftb-videos">34</b> videos</span><span id="ftb-views-wrap" hidden><b id="ftb-views">0</b> views</span></span></span>
         <span class="arrow" aria-hidden="true">↗</span>
       </a>
       <a class="tile" href="https://www.twitch.tv/sroolsking" target="_blank" rel="noopener">
@@ -408,7 +414,7 @@ body{background:var(--bg)}
 (function(){
   var root = document.getElementById("srk");
   var OWN = [10767645246, 10345791932, 2101240674, 4592957519, 3482493471, 4201850178, 2533980161, 9530317138, 2838525435, 1863305565, 3250974283, 3291101795], WORKED = [3746418487];
-  var YT_ID = "UCxVNuXOtvIn214EDRwgAgPQ", YT_API_KEY = "";   /* optional: a YouTube Data API key makes the YouTube numbers official */
+  var YT_ID = "UCxVNuXOtvIn214EDRwgAgPQ", FTB_ID = "UC8OVbnfqSap98PcS69iWfgg", YT_API_KEY = "";   /* optional: a YouTube Data API key makes the YouTube numbers official */
   var TW_LOGIN = "sroolsking";
   var UNLISTED_VISITS = 78900, UNLISTED_FAVS = 5908;   /* private and test projects, counted but not listed */
   var fmt = function(x){ return Number(x).toLocaleString("en-US"); };
@@ -449,18 +455,25 @@ body{background:var(--bg)}
   });
 
   /* YouTube: official API when a key is set, otherwise a public counter; the numbers in the page are the fallback. */
-  if (YT_API_KEY){
-    get("https://www.googleapis.com/youtube/v3/channels?part=statistics&id=" + YT_ID + "&key=" + YT_API_KEY).then(function(j){
-      var s = j && j.items && j.items[0] && j.items[0].statistics; if (!s) return;
-      set("#yt-subs", s.subscriberCount); set("#yt-videos", s.videoCount); set("#yt-views", s.viewCount);
-    });
-  } else {
-    get("https://api.socialcounts.org/youtube-live-subscriber-count/" + YT_ID).then(function(j){
-      if (!j) return;
-      if (j.est_sub) set("#yt-subs", j.est_sub);
-      (j.table || []).forEach(function(r){ if (/view/i.test(r.name)) set("#yt-views", r.count); if (/video/i.test(r.name)) set("#yt-videos", r.count); });
-    });
-  }
+  [["yt", YT_ID], ["ftb", FTB_ID]].forEach(function(ch){
+    var p = ch[0], id = ch[1];
+    if (YT_API_KEY){
+      get("https://www.googleapis.com/youtube/v3/channels?part=statistics&id=" + id + "&key=" + YT_API_KEY).then(function(j){
+        var s = j && j.items && j.items[0] && j.items[0].statistics; if (!s) return;
+        set("#" + p + "-subs", s.subscriberCount); set("#" + p + "-videos", s.videoCount); set("#" + p + "-views", s.viewCount);
+        var w = root.querySelector("#" + p + "-views-wrap"); if (w) w.hidden = false;
+      });
+    } else {
+      get("https://api.socialcounts.org/youtube-live-subscriber-count/" + id).then(function(j){
+        if (!j) return;
+        if (j.est_sub) set("#" + p + "-subs", j.est_sub);
+        (j.table || []).forEach(function(r){
+          if (/view/i.test(r.name)){ set("#" + p + "-views", r.count); var w = root.querySelector("#" + p + "-views-wrap"); if (w) w.hidden = false; }
+          if (/video/i.test(r.name)) set("#" + p + "-videos", r.count);
+        });
+      });
+    }
+  });
 
   /* Twitch: follower count and live status via DecAPI. */
   get("https://decapi.me/twitch/followcount/" + TW_LOGIN, true).then(function(t){ if (t && /^\d+$/.test(t.trim())) set("#tw-followers", t.trim()); });

@@ -44,6 +44,7 @@ WORKED_ON = [
 ]
 YT = dict(url="https://www.youtube.com/@sroolsking", handle="@sroolsking", channel_id="UCxVNuXOtvIn214EDRwgAgPQ", subs=986, videos=151, views=349226, since="Jan 2020")
 TW = dict(url="https://www.twitch.tv/sroolsking", handle="twitch.tv/sroolsking", login="sroolsking", followers=159)
+FTB = dict(url="https://www.youtube.com/@FTBVision", handle="@FTBVision", channel_id="UC8OVbnfqSap98PcS69iWfgg", subs=125, videos=34, role="Founder, director and manager")
 CONTACT = [
   ("Discord", "discord.gg/WewVqAu", "https://discord.gg/WewVqAu"),
   ("Instagram", "@sroolsking_", "https://www.instagram.com/sroolsking_"),
@@ -232,7 +233,7 @@ body{background:var(--bg)}
 #srk .worked .big small{display:block;font:400 14px/1.4 var(--body);color:var(--muted);letter-spacing:0;margin-top:6px}
 
 /* Watch */
-#srk .tiles{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+#srk .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
 #srk .tile{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:22px 24px;border-radius:18px;background:var(--panel);border:1px solid var(--line);transition:transform .15s}
 #srk a.tile:hover{transform:translateY(-2px)}
 #srk .tile .ic{width:48px;height:48px;border-radius:12px;display:grid;place-items:center}
@@ -286,9 +287,9 @@ BODY = f'''<div id="srk">
 
   <header class="hero" id="top">
     <div class="hero-copy">
-      <span class="eyebrow">Roblox builder · Golden Eagle Studios · Brooklyn, NY</span>
+      <span class="eyebrow">Roblox builder · Brooklyn, NY</span>
       <h1>I build Roblox tycoons.</h1>
-      <p class="lede">Twelve games of my own since 2020, from <b>Ultimate Modern House Tycoon</b> to <b>Ultimate Mansion Tycoon</b>, and part of the team behind <b>House Tycoon 2</b>.</p>
+      <p class="lede">Founder of <b>Golden Eagle Studios</b> and <b>Peregrine Falcon Studios</b>. Twelve games of my own since 2020, from <b>Ultimate Modern House Tycoon</b> to <b>Ultimate Mansion Tycoon</b>, and part of the team behind <b>House Tycoon 2</b>.</p>
       <div class="cta">
         <a class="btn" href="https://www.roblox.com/games/127633247396147" target="_blank" rel="noopener">Play the latest <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg></a>
         <a class="btn ghost" href="#watch">Watch</a>
@@ -345,12 +346,18 @@ BODY = f'''<div id="srk">
   </section>
 
   <section id="watch">
-    <div class="sec"><h2>Watch</h2><span class="note">Dev logs, builds and live sessions</span></div>
+    <div class="sec"><h2>Watch</h2><span class="note">Dev logs, builds, live sessions and FTB</span></div>
     <div class="tiles">
       <a class="tile" href="{YT["url"]}" target="_blank" rel="noopener">
         <span class="ic" style="background:#FF0033"><svg viewBox="0 0 24 24" aria-hidden="true">{YT_SVG}</svg></span>
         <span class="t"><b>YouTube</b><span>{YT["handle"]} · since {YT["since"]}</span>
           <span class="stats"><span><b id="yt-subs">{n(YT["subs"])}</b> subscribers</span><span><b id="yt-videos">{n(YT["videos"])}</b> videos</span><span><b id="yt-views">{n(YT["views"])}</b> views</span></span></span>
+        <span class="arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="tile" href="{FTB["url"]}" target="_blank" rel="noopener">
+        <span class="ic" style="background:#FF0033"><svg viewBox="0 0 24 24" aria-hidden="true">{YT_SVG}</svg></span>
+        <span class="t"><b>FTB</b><span>{FTB["handle"]} · {FTB["role"]}</span>
+          <span class="stats"><span><b id="ftb-subs">{n(FTB["subs"])}</b> subscribers</span><span><b id="ftb-videos">{n(FTB["videos"])}</b> videos</span><span id="ftb-views-wrap" hidden><b id="ftb-views">0</b> views</span></span></span>
         <span class="arrow" aria-hidden="true">↗</span>
       </a>
       <a class="tile" href="{TW["url"]}" target="_blank" rel="noopener">
@@ -378,7 +385,7 @@ JS = r"""
 (function(){
   var root = document.getElementById("srk");
   var OWN = %s, WORKED = %s;
-  var YT_ID = %s, YT_API_KEY = "";   /* optional: a YouTube Data API key makes the YouTube numbers official */
+  var YT_ID = %s, FTB_ID = %s, YT_API_KEY = "";   /* optional: a YouTube Data API key makes the YouTube numbers official */
   var TW_LOGIN = %s;
   var UNLISTED_VISITS = %s, UNLISTED_FAVS = %s;   /* private and test projects, counted but not listed */
   var fmt = function(x){ return Number(x).toLocaleString("en-US"); };
@@ -419,18 +426,25 @@ JS = r"""
   });
 
   /* YouTube: official API when a key is set, otherwise a public counter; the numbers in the page are the fallback. */
-  if (YT_API_KEY){
-    get("https://www.googleapis.com/youtube/v3/channels?part=statistics&id=" + YT_ID + "&key=" + YT_API_KEY).then(function(j){
-      var s = j && j.items && j.items[0] && j.items[0].statistics; if (!s) return;
-      set("#yt-subs", s.subscriberCount); set("#yt-videos", s.videoCount); set("#yt-views", s.viewCount);
-    });
-  } else {
-    get("https://api.socialcounts.org/youtube-live-subscriber-count/" + YT_ID).then(function(j){
-      if (!j) return;
-      if (j.est_sub) set("#yt-subs", j.est_sub);
-      (j.table || []).forEach(function(r){ if (/view/i.test(r.name)) set("#yt-views", r.count); if (/video/i.test(r.name)) set("#yt-videos", r.count); });
-    });
-  }
+  [["yt", YT_ID], ["ftb", FTB_ID]].forEach(function(ch){
+    var p = ch[0], id = ch[1];
+    if (YT_API_KEY){
+      get("https://www.googleapis.com/youtube/v3/channels?part=statistics&id=" + id + "&key=" + YT_API_KEY).then(function(j){
+        var s = j && j.items && j.items[0] && j.items[0].statistics; if (!s) return;
+        set("#" + p + "-subs", s.subscriberCount); set("#" + p + "-videos", s.videoCount); set("#" + p + "-views", s.viewCount);
+        var w = root.querySelector("#" + p + "-views-wrap"); if (w) w.hidden = false;
+      });
+    } else {
+      get("https://api.socialcounts.org/youtube-live-subscriber-count/" + id).then(function(j){
+        if (!j) return;
+        if (j.est_sub) set("#" + p + "-subs", j.est_sub);
+        (j.table || []).forEach(function(r){
+          if (/view/i.test(r.name)){ set("#" + p + "-views", r.count); var w = root.querySelector("#" + p + "-views-wrap"); if (w) w.hidden = false; }
+          if (/video/i.test(r.name)) set("#" + p + "-videos", r.count);
+        });
+      });
+    }
+  });
 
   /* Twitch: follower count and live status via DecAPI. */
   get("https://decapi.me/twitch/followcount/" + TW_LOGIN, true).then(function(t){ if (t && /^\d+$/.test(t.trim())) set("#tw-followers", t.trim()); });
@@ -441,7 +455,7 @@ JS = r"""
   });
 })();
 </script>
-""" % (json.dumps([g["u"] for g in GAMES]), json.dumps([g["u"] for g in WORKED_ON]), json.dumps(YT["channel_id"]), json.dumps(TW["login"]), UNLISTED_VISITS, UNLISTED_FAVS)
+""" % (json.dumps([g["u"] for g in GAMES]), json.dumps([g["u"] for g in WORKED_ON]), json.dumps(YT["channel_id"]), json.dumps(FTB["channel_id"]), json.dumps(TW["login"]), UNLISTED_VISITS, UNLISTED_FAVS)
 
 FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Schibsted+Grotesk:wght@400;500;600&display=swap">'
 HEAD = f'<title>SRoolsKing</title>\n<meta name="description" content="SRoolsKing, Roblox builder at Golden Eagle Studios. {compact(all_visits)} visits across tycoons like Ultimate Mansion Tycoon and House Tycoon 2. Games, YouTube, Twitch and contact.">\n{FONTS}\n<style>{CSS}</style>'
