@@ -378,9 +378,9 @@ def stats_band(sec_id, eyebrow, title, intro="", after=""):
       <div class="stat"><b id="t-visits">{n(all_visits)}</b><span>Total visits</span></div>
       <div class="stat"><b id="t-favs">{n(all_favs)}</b><span>Favorites</span></div>
       <div class="stat"><b>{len(GAMES) + len(WORKED_ON)}</b><span>Games shipped</span></div>
-      <div class="stat"><b>2020</b><span>Building since</span></div>
+      <div class="stat"><b data-plain="1">2020</b><span>Building since</span></div>
     </div>
-    <div class="split"><span><b id="t-own">{n(own_visits)}</b> on my own games</span><span><b id="t-worked">{n(w["visits"])}</b> on games built for other studios</span><span><span class="dot" id="dot"></span><span id="live-text">Stats as of {SNAPSHOT}</span></span></div>{after}
+    <div class="split"><span><b id="t-own">{n(own_visits)}</b> on my own games</span><span><b id="t-worked">{n(w["visits"])}</b> on games built with others</span><span><span class="dot" id="dot"></span><span id="live-text">Stats as of {SNAPSHOT}</span></span></div>{after}
   </div></section>'''
 
 def contact_section():
@@ -573,11 +573,11 @@ JS = r"""
     target = Math.round(Number(target)); if (isNaN(target)) return;
     if (el._raf) cancelAnimationFrame(el._raf);
     var from = parseInt((el.textContent || "0").replace(/[^\d]/g, ""), 10) || 0;
-    if (reduce || from === target){ el.textContent = fmt(target); return; }
+    if (reduce || from === target){ el.textContent = (el.dataset.plain ? String : fmt)(target); return; }
     var t0 = performance.now();
     (function step(now){
       var k = Math.min(1, (now - t0) / dur);
-      el.textContent = fmt(Math.round(from + (target - from) * ease(k)));
+      el.textContent = (el.dataset.plain ? String : fmt)(Math.round(from + (target - from) * ease(k)));
       el._raf = k < 1 ? requestAnimationFrame(step) : null;
     })(t0);
   }
@@ -595,7 +595,7 @@ JS = r"""
   if ("IntersectionObserver" in window && !reduce){
     var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if (e.isIntersecting){ reveal(e.target); io.unobserve(e.target); } }); }, { threshold: 0.3 });
     nums.forEach(function(el){ if (!el._shown) io.observe(el); });
-  } else nums.forEach(function(el){ el._shown = true; el.textContent = fmt(el.dataset.target); });
+  } else nums.forEach(function(el){ el._shown = true; el.textContent = (el.dataset.plain ? String : fmt)(el.dataset.target); });
 
   /* Roblox: live visits, favorites, playing-now and fresh thumbnails through the public RoProxy mirror. */
   var ids = OWN.concat(WORKED).join(",");

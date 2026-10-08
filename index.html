@@ -334,9 +334,9 @@ body{background:var(--light);color:var(--ink)}
       <div class="stat"><b id="t-visits">361,218,903</b><span>Total visits</span></div>
       <div class="stat"><b id="t-favs">508,968</b><span>Favorites</span></div>
       <div class="stat"><b>13</b><span>Games shipped</span></div>
-      <div class="stat"><b>2020</b><span>Building since</span></div>
+      <div class="stat"><b data-plain="1">2020</b><span>Building since</span></div>
     </div>
-    <div class="split"><span><b id="t-own">25,122,162</b> on my own games</span><span><b id="t-worked">336,096,741</b> on games built for other studios</span><span><span class="dot" id="dot"></span><span id="live-text">Stats as of Oct 7, 2026</span></span></div>
+    <div class="split"><span><b id="t-own">25,122,162</b> on my own games</span><span><b id="t-worked">336,096,741</b> on games built with others</span><span><span class="dot" id="dot"></span><span id="live-text">Stats as of Oct 7, 2026</span></span></div>
     <div class="btns center">
       <a class="pill" href="roblox.html">See the games <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5l7 7-7 7-1.4-1.4 4.6-4.6H4v-2h12.2l-4.6-4.6z"/></svg></a>
       <a class="pill line" href="https://www.roblox.com/games/127633247396147" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg> Play the latest</a>
@@ -408,11 +408,11 @@ body{background:var(--light);color:var(--ink)}
     target = Math.round(Number(target)); if (isNaN(target)) return;
     if (el._raf) cancelAnimationFrame(el._raf);
     var from = parseInt((el.textContent || "0").replace(/[^\d]/g, ""), 10) || 0;
-    if (reduce || from === target){ el.textContent = fmt(target); return; }
+    if (reduce || from === target){ el.textContent = (el.dataset.plain ? String : fmt)(target); return; }
     var t0 = performance.now();
     (function step(now){
       var k = Math.min(1, (now - t0) / dur);
-      el.textContent = fmt(Math.round(from + (target - from) * ease(k)));
+      el.textContent = (el.dataset.plain ? String : fmt)(Math.round(from + (target - from) * ease(k)));
       el._raf = k < 1 ? requestAnimationFrame(step) : null;
     })(t0);
   }
@@ -430,7 +430,7 @@ body{background:var(--light);color:var(--ink)}
   if ("IntersectionObserver" in window && !reduce){
     var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if (e.isIntersecting){ reveal(e.target); io.unobserve(e.target); } }); }, { threshold: 0.3 });
     nums.forEach(function(el){ if (!el._shown) io.observe(el); });
-  } else nums.forEach(function(el){ el._shown = true; el.textContent = fmt(el.dataset.target); });
+  } else nums.forEach(function(el){ el._shown = true; el.textContent = (el.dataset.plain ? String : fmt)(el.dataset.target); });
 
   /* Roblox: live visits, favorites, playing-now and fresh thumbnails through the public RoProxy mirror. */
   var ids = OWN.concat(WORKED).join(",");
