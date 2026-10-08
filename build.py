@@ -77,16 +77,15 @@ def shot(g, cls="shot"):
             f'<span class="fb">{esc(g["name"])}</span>'
             f'<img src="{CDN.format(g["thumb"])}" alt="" data-thumb="{g["u"]}" onerror="this.remove()" loading="lazy" decoding="async"></span>')
 
+
+
 def card(g):
     label, cls = STATUS[g["status"]]
     url = f'https://www.roblox.com/games/{g["p"]}'
     chips = f'<span class="chip {cls}">{label}</span><span class="chip">{esc(g["by"])}</span>'
     if g["code"]: chips += f'<span class="chip code">Code {esc(g["code"])}</span>'
-    play = "" if g["status"] == "retired" else f'<a class="btn sm" href="{url}" target="_blank" rel="noopener">Play <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg></a>'
-    link_open = f'<a href="{url}" target="_blank" rel="noopener" class="shot-link" aria-label="Play {esc(g["name"])}">' if g["status"] != "retired" else '<span class="shot-link">'
-    link_close = "</a>" if g["status"] != "retired" else "</span>"
     return f'''<article class="card" data-u="{g["u"]}">
-  {link_open}{shot(g)}{link_close}
+  <a href="{url}" target="_blank" rel="noopener" class="shot-link" aria-label="Play {esc(g["name"])}">{shot(g)}</a>
   <div class="cap">
     <div class="cap-top"><h3>{esc(g["name"])}</h3><span class="year">{g["year"]}</span></div>
     <p>{esc(g["blurb"])}</p>
@@ -96,7 +95,7 @@ def card(g):
       <div><dd data-k="favs">{n(g["favs"])}</dd><dt>favorites</dt></div>
       <div class="playing" hidden><dd data-k="playing">0</dd><dt>playing now</dt></div>
     </dl>
-    {play}
+    <a class="btn sm" href="{url}" target="_blank" rel="noopener">Play<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg></a>
   </div>
 </article>'''
 
@@ -111,257 +110,247 @@ def row(g):
   <span class="arrow" aria-hidden="true">→</span>
 </a>'''
 
-new_games = [g for g in GAMES if g["year"] == "2026" and g["visits"] < 100000]
-big = sorted([g for g in GAMES if g not in new_games and g["visits"] >= 1000000], key=lambda g: -g["visits"])
-rest = sorted([g for g in GAMES if g not in new_games and g not in big], key=lambda g: -g["visits"])
+SHOWN = [g for g in GAMES if g["status"] != "retired"]          # retired/private games count in the totals but are not displayed
+new_games = [g for g in SHOWN if g["year"] == "2026" and g["visits"] < 100000]
+big = sorted([g for g in SHOWN if g not in new_games and g["visits"] >= 1000000], key=lambda g: -g["visits"])
+rest = sorted([g for g in SHOWN if g not in new_games and g not in big], key=lambda g: -g["visits"])
 w = WORKED_ON[0]
-wurl = f'https://www.roblox.com/games/{w["p"]}'
 
 CSS = r"""
-/* Builder's project sheet: one 1080px column, hairline-ruled sections, 16:9 shots with a caption under each. */
+/* Dark luxury: one 1120px column on near-black, gold hairlines, cream text, Bodoni numerals. Single committed dark look. */
 :root{
-  --bg:#F5F6F7; --fg:#141517; --muted:#696D74; --line:#E0E2E6; --panel:#FFFFFF;
-  --accent:#F2B705; --live:#17A34A;
-  --display:"Bricolage Grotesque","Arial Narrow",system-ui,sans-serif;
-  --body:"Schibsted Grotesk","Helvetica Neue",Arial,sans-serif;
+  --bg:#0A0A0B; --bg2:#111113; --panel:#151517; --fg:#F3ECDC; --muted:#9A9283; --dim:#5E5A52;
+  --line:#26241F; --gold:#D4AF37; --gold-2:#F3D985; --gold-3:#8A6B1E; --gold-line:rgba(212,175,55,.38); --gold-soft:rgba(212,175,55,.10);
+  --cash:#43C46F;
+  --display:"Bodoni Moda","Didot","Bodoni 72","Times New Roman",serif;
+  --body:"Manrope","Helvetica Neue",Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0F1012; --fg:#F2F2F0; --muted:#9A9EA6; --line:#26282D; --panel:#17181B;
-  --accent:#F7C32E; --live:#3DDC6A; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0F1012; --fg:#F2F2F0; --muted:#9A9EA6; --line:#26282D; --panel:#17181B;
-  --accent:#F7C32E; --live:#3DDC6A; color-scheme:dark}
-body{background:var(--bg)}
-#srk{background:var(--bg);color:var(--fg);font:400 17px/1.5 var(--body);max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:0 40px;box-sizing:border-box}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--fg)}
+#srk{background:var(--bg);color:var(--fg);font:400 16.5px/1.6 var(--body);max-width:1120px;margin:0 auto;padding-inline:22px;padding-block:0 48px;box-sizing:border-box;position:relative}
 #srk *{box-sizing:border-box}
 #srk a{color:inherit;text-decoration:none}
-#srk a:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:8px}
-#srk ::selection{background:var(--accent);color:#141517}
-#srk h1,#srk h2,#srk h3{margin:0;font-family:var(--display);text-wrap:balance;letter-spacing:-.02em;color:var(--fg)}
+#srk a:focus-visible,#srk button:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+#srk ::selection{background:var(--gold);color:#0A0A0B}
+#srk h1,#srk h2,#srk h3{margin:0;font-family:var(--display);font-weight:600;letter-spacing:-.01em;text-wrap:balance;color:var(--fg)}
 #srk p{margin:0}
-#srk .eyebrow{font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-#srk .mono{font-family:var(--mono);font-size:12.5px;letter-spacing:.02em}
-#srk .muted{color:var(--muted)}
+#srk .eyebrow{font:600 11.5px/1.4 var(--body);letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+#srk .mono{font-family:var(--mono);font-size:12px;letter-spacing:.06em}
+#srk .gold{background:linear-gradient(100deg,var(--gold-2) 0%,var(--gold) 45%,var(--gold-3) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* Nav */
-#srk .nav{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:22px}
-#srk .mark{font:700 20px/1 var(--display);letter-spacing:-.02em}
-#srk .mark b{color:var(--accent)}
-#srk .nav ul{display:flex;gap:22px;list-style:none;margin:0;padding:0;font-size:15px;font-weight:500;color:var(--muted)}
-#srk .nav ul a:hover{color:var(--fg)}
+#srk .nav{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:26px;border-bottom:1px solid var(--line)}
+#srk .mark{display:inline-flex;align-items:center;gap:10px;font:600 21px/1 var(--display);letter-spacing:.02em}
+#srk .mark svg{width:26px;height:26px;fill:none;stroke:var(--gold);stroke-width:1.4;stroke-linejoin:round}
+#srk .nav ul{display:flex;gap:28px;list-style:none;margin:0;padding:0;font:600 11.5px var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+#srk .nav ul a{padding-bottom:4px;border-bottom:1px solid transparent}
+#srk .nav ul a:hover{color:var(--gold);border-bottom-color:var(--gold-line)}
 
 /* Hero */
-#srk .hero{display:grid;grid-template-columns:1fr 300px;gap:40px;align-items:end;padding-block:48px 44px}
-#srk .hero-copy{display:flex;flex-direction:column;gap:22px;min-width:0}
-#srk h1{font-size:clamp(46px,8vw,100px);font-weight:800;line-height:.94;font-variation-settings:"opsz" 96}
-#srk .lede{font-size:19px;color:var(--muted);max-width:46ch}
+#srk .hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:48px;align-items:center;padding-block:64px 56px}
+#srk .hero-copy{display:flex;flex-direction:column;gap:26px;min-width:0}
+#srk h1{font-size:clamp(54px,8.6vw,118px);font-weight:600;line-height:.96;letter-spacing:-.015em}
+#srk h1 em{font-style:italic;font-weight:500}
+#srk .lede{font-size:18px;line-height:1.65;color:var(--muted);max-width:50ch}
 #srk .lede b{color:var(--fg);font-weight:600}
-#srk .cta{display:flex;flex-wrap:wrap;gap:10px}
-#srk .btn{display:inline-flex;align-items:center;gap:8px;font:600 15px var(--body);padding:12px 20px;border-radius:999px;border:1.5px solid var(--fg);background:var(--fg);color:var(--bg);transition:transform .12s;cursor:pointer}
-#srk .btn:hover{transform:translateY(-1px)}
-#srk .btn.ghost{background:transparent;color:var(--fg)}
-#srk .btn.sm{padding:9px 16px;font-size:14px}
-#srk .btn svg{width:14px;height:14px;fill:currentColor}
-#srk .avatar{position:relative;aspect-ratio:1;max-width:100%;border-radius:24px;background:var(--panel);border:1px solid var(--line);overflow:hidden}
-#srk .avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-#srk .avatar .fb{position:absolute;inset:0;display:grid;place-items:center;font:800 72px var(--display);color:var(--line)}
-#srk .avatar .tag{position:absolute;left:14px;bottom:12px;color:var(--muted);z-index:1}
+#srk .cta{display:flex;flex-wrap:wrap;gap:12px}
+#srk .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:700 12px var(--body);letter-spacing:.18em;text-transform:uppercase;padding:16px 26px;border:1px solid var(--gold);background:linear-gradient(100deg,var(--gold-2),var(--gold) 55%,var(--gold-3));color:#0A0A0B;transition:transform .15s,box-shadow .15s}
+#srk .btn:hover{transform:translateY(-1px);box-shadow:0 10px 30px rgba(212,175,55,.18)}
+#srk .btn.ghost{background:transparent;color:var(--gold)}
+#srk .btn.ghost:hover{background:var(--gold-soft)}
+#srk .btn.sm{padding:12px 18px;font-size:11px}
+#srk .btn svg{width:12px;height:12px;fill:currentColor}
+#srk .portrait{position:relative;aspect-ratio:4/5;max-width:100%;border:1px solid var(--gold-line);background:var(--bg2);overflow:hidden}
+#srk .portrait::before{content:"";position:absolute;inset:10px;border:1px solid var(--gold-line);pointer-events:none;z-index:2}
+#srk .portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block;filter:saturate(.92)}
+#srk .portrait .fb{position:absolute;inset:0;display:grid;place-items:center;font:600 120px var(--display);color:var(--line)}
+#srk .portrait .tag{position:absolute;left:24px;bottom:20px;z-index:3;color:var(--gold);background:rgba(10,10,11,.7);padding:6px 10px;border:1px solid var(--gold-line)}
 
-/* Stats strip */
-#srk .strip{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:0}
-#srk .strip>div{padding:18px 0;display:flex;flex-direction:column;gap:2px;min-width:0}
-#srk .strip>div+div{padding-left:24px;border-left:1px solid var(--line)}
-#srk .strip dd{margin:0;font:600 clamp(22px,2.8vw,32px)/1.1 var(--display);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-#srk .strip dt{font-size:13px;color:var(--muted)}
-#srk .split{display:flex;flex-wrap:wrap;gap:6px 24px;padding-top:14px;font-size:14px;color:var(--muted)}
+/* Ledger */
+#srk .strip{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--gold-line);border-bottom:1px solid var(--gold-line);margin:0}
+#srk .strip>div{padding:24px 0;display:flex;flex-direction:column;gap:6px;min-width:0}
+#srk .strip>div+div{padding-left:28px;border-left:1px solid var(--line)}
+#srk .strip dd{margin:0;font:600 clamp(28px,3.4vw,44px)/1 var(--display);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+#srk .strip dt{font:600 11px/1.4 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+#srk .split{display:flex;flex-wrap:wrap;gap:8px 28px;padding-top:16px;font-size:13.5px;color:var(--muted)}
 #srk .split b{color:var(--fg);font-weight:600;font-variant-numeric:tabular-nums}
+#srk .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--dim);margin-right:8px;vertical-align:1px}
+#srk .dot.on{background:var(--cash);box-shadow:0 0 0 3px rgba(67,196,111,.18)}
 
 /* Sections */
-#srk section{padding-block:64px 0}
-#srk .sec{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:24px}
-#srk .sec h2{font-size:clamp(28px,3.6vw,40px);font-weight:700}
-#srk .sec .note{font-size:14px;color:var(--muted)}
-#srk .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);margin-right:6px;vertical-align:1px}
-#srk .dot.on{background:var(--live)}
+#srk section{padding-block:72px 0}
+#srk .sec{display:flex;align-items:baseline;gap:20px;margin-bottom:30px}
+#srk .sec h2{font-size:clamp(32px,4vw,46px);white-space:nowrap}
+#srk .sec .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--gold-line),transparent)}
+#srk .sec .note{font:600 11px/1.4 var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
 
 /* Cards */
-#srk .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px 28px}
-#srk .card{display:flex;flex-direction:column;gap:16px;min-width:0}
+#srk .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 32px}
+#srk .card{display:flex;flex-direction:column;gap:18px;min-width:0}
 #srk .shot-link{display:block}
-#srk .shot{position:relative;display:block;aspect-ratio:16/9;max-width:100%;border-radius:18px;overflow:hidden;background:var(--panel);transition:transform .18s}
-#srk a.shot-link:hover .shot{transform:scale(1.01)}
+#srk .shot{position:relative;display:block;aspect-ratio:16/9;max-width:100%;overflow:hidden;background:var(--bg2);border:1px solid var(--line);transition:border-color .2s,transform .25s}
+#srk a.shot-link:hover .shot{border-color:var(--gold);transform:translateY(-3px)}
 #srk .shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-#srk .shot .fb{position:absolute;inset:0;display:flex;align-items:flex-end;padding:clamp(14px,3vw,26px);color:#fff;font:800 clamp(22px,3.4vw,38px)/.95 var(--display);letter-spacing:-.03em;text-shadow:0 2px 20px rgba(0,0,0,.25)}
+#srk .shot .fb{position:absolute;inset:0;display:flex;align-items:flex-end;padding:clamp(14px,3vw,26px);color:#fff;font:600 clamp(22px,3.2vw,36px)/1 var(--display);letter-spacing:-.01em;text-shadow:0 2px 20px rgba(0,0,0,.4)}
 #srk .cap{display:flex;flex-direction:column;gap:12px;min-width:0}
 #srk .cap-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-#srk .cap h3{font-size:clamp(21px,2.4vw,26px);font-weight:700}
-#srk .year{font-family:var(--mono);font-size:13px;color:var(--muted);flex:none}
-#srk .cap p{color:var(--muted);font-size:15.5px;max-width:52ch}
+#srk .cap h3{font-size:clamp(24px,2.6vw,30px)}
+#srk .year{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--gold);flex:none}
+#srk .cap p{color:var(--muted);font-size:15px;max-width:52ch}
 #srk .chips{display:flex;flex-wrap:wrap;gap:8px}
-#srk .chip{font-size:12.5px;font-weight:500;padding:4px 9px;border-radius:7px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
-#srk .chip.live{color:var(--live);border-color:color-mix(in srgb,var(--live) 40%,var(--line))}
-#srk .chip.beta{color:var(--fg)}
-#srk .chip.retired{border-style:dashed}
-#srk .chip.code{font-family:var(--mono);font-size:12px}
-#srk .kv{display:flex;flex-wrap:wrap;gap:10px 24px;margin:0}
-#srk .kv>div{display:flex;align-items:baseline;gap:6px;min-width:0}
-#srk .kv dd{margin:0;font:600 19px/1.15 var(--display);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-#srk .kv dt{font-size:13px;color:var(--muted)}
-#srk .kv .playing dd{color:var(--live)}
+#srk .chip{font:600 10.5px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;padding:7px 10px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+#srk .chip.live{color:var(--cash);border-color:rgba(67,196,111,.35)}
+#srk .chip.beta{color:var(--gold);border-color:var(--gold-line)}
+#srk .chip.code{font-family:var(--mono);text-transform:none;letter-spacing:.06em;font-size:11.5px}
+#srk .kv{display:flex;flex-wrap:wrap;gap:10px 26px;margin:0}
+#srk .kv>div{display:flex;align-items:baseline;gap:7px;min-width:0}
+#srk .kv dd{margin:0;font:600 22px/1 var(--display);font-variant-numeric:tabular-nums}
+#srk .kv dt{font-size:12.5px;letter-spacing:.04em;color:var(--muted)}
+#srk .kv .playing dd{color:var(--cash)}
 #srk .card .btn{align-self:flex-start}
 
 /* Compact rows */
 #srk .rows{display:flex;flex-direction:column;border-top:1px solid var(--line)}
-#srk .rowg{display:grid;grid-template-columns:120px minmax(0,1.6fr) auto auto 20px;gap:18px;align-items:center;padding:14px 2px;border-bottom:1px solid var(--line)}
-#srk .mini{position:relative;display:block;aspect-ratio:16/9;width:120px;max-width:100%;border-radius:10px;overflow:hidden}
+#srk .rowg{display:grid;grid-template-columns:128px minmax(0,1.6fr) auto auto 24px;gap:20px;align-items:center;padding:16px 4px;border-bottom:1px solid var(--line);transition:background .15s}
+#srk .rowg:hover{background:var(--bg2)}
+#srk .mini{position:relative;display:block;aspect-ratio:16/9;width:128px;max-width:100%;overflow:hidden;border:1px solid var(--line)}
 #srk .mini img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-#srk .mini .fb{position:absolute;inset:0;display:flex;align-items:flex-end;padding:6px 8px;color:#fff;font:800 11px/1.05 var(--display);letter-spacing:-.02em}
-#srk .rowg-main{display:flex;flex-direction:column;gap:2px;min-width:0}
-#srk .rowg-main b{font-weight:600}
-#srk .rowg-main span{font-size:14px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#srk .rowg-meta{display:flex;align-items:center;gap:10px}
-#srk .rowg-n{font-size:14px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
-#srk .rowg-n b{color:var(--fg);font-weight:600}
-#srk .arrow{color:var(--muted);transition:transform .15s}
-#srk .rowg:hover .arrow,#srk .row:hover .arrow{transform:translateX(4px);color:var(--fg)}
-
-/* Worked on */
-#srk .worked{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:center;padding:24px;border-radius:22px;background:var(--panel);border:1px solid var(--line)}
-#srk .worked .cap{gap:10px}
-#srk .worked .big{font:700 clamp(36px,5vw,56px)/1 var(--display);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
-#srk .worked .big small{display:block;font:400 14px/1.4 var(--body);color:var(--muted);letter-spacing:0;margin-top:6px}
+#srk .mini .fb{position:absolute;inset:0;display:flex;align-items:flex-end;padding:6px 8px;color:#fff;font:600 11px/1.05 var(--display)}
+#srk .rowg-main{display:flex;flex-direction:column;gap:3px;min-width:0}
+#srk .rowg-main b{font:600 18px/1.2 var(--display)}
+#srk .rowg-main span{font-size:13.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#srk .rowg-meta{display:flex;align-items:center;gap:12px}
+#srk .rowg-n{font-size:13.5px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+#srk .rowg-n b{color:var(--fg);font:600 18px/1 var(--display)}
+#srk .arrow{color:var(--dim);transition:transform .15s,color .15s;font-size:18px}
+#srk .rowg:hover .arrow,#srk .row:hover .arrow{transform:translateX(5px);color:var(--gold)}
 
 /* Watch */
-#srk .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
-#srk .tile{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:22px 24px;border-radius:18px;background:var(--panel);border:1px solid var(--line);transition:transform .15s}
-#srk a.tile:hover{transform:translateY(-2px)}
-#srk .tile .ic{width:48px;height:48px;border-radius:12px;display:grid;place-items:center}
-#srk .tile .ic svg{width:24px;height:24px;fill:#fff}
-#srk .tile .t{display:flex;flex-direction:column;gap:2px;min-width:0}
-#srk .tile .t b{font-weight:600;font-size:17px}
-#srk .tile .t span{font-size:14px;color:var(--muted);overflow-wrap:anywhere}
-#srk .tile .stats{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:14px;color:var(--muted)}
-#srk .tile .stats b{color:var(--fg);font-weight:600;font-variant-numeric:tabular-nums}
+#srk .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+#srk .tile{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;padding:24px;background:var(--panel);border:1px solid var(--line);transition:border-color .2s,transform .15s}
+#srk a.tile:hover{border-color:var(--gold-line);transform:translateY(-2px)}
+#srk .tile .ic{width:48px;height:48px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold-2),var(--gold) 55%,var(--gold-3));color:#0A0A0B}
+#srk .tile .ic svg{width:22px;height:22px;fill:currentColor}
+#srk .tile .t{display:flex;flex-direction:column;gap:3px;min-width:0}
+#srk .tile .t b{font:600 20px/1.2 var(--display)}
+#srk .tile .t span{font-size:13.5px;color:var(--muted);overflow-wrap:anywhere}
+#srk .tile .stats{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:8px;font-size:13px;color:var(--muted)}
+#srk .tile .stats b{color:var(--fg);font:600 17px/1 var(--display);font-variant-numeric:tabular-nums}
 #srk .tile .arrow{font-size:20px}
-#srk .liv{display:none;font-size:11px;font-weight:700;letter-spacing:.08em;padding:3px 7px;border-radius:5px;background:#E11D48;color:#fff;vertical-align:2px;margin-left:8px}
+#srk .liv{display:none;font:700 10px/1 var(--body);letter-spacing:.14em;padding:4px 7px;background:#C8102E;color:#fff;vertical-align:3px;margin-left:10px}
 #srk .liv.on{display:inline-block}
 
 /* Contact */
-#srk .row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 2px;border-bottom:1px solid var(--line)}
-#srk .row .l{display:flex;flex-direction:column;gap:2px;min-width:0}
-#srk .row .l b{font-weight:600}
-#srk .row .l span{font-size:14px;color:var(--muted);overflow-wrap:anywhere}
+#srk .row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 4px;border-bottom:1px solid var(--line);transition:background .15s}
+#srk .row:hover{background:var(--bg2)}
+#srk .row .l{display:flex;flex-direction:column;gap:3px;min-width:0}
+#srk .row .l b{font:600 19px/1.2 var(--display)}
+#srk .row .l span{font-size:13.5px;color:var(--muted);overflow-wrap:anywhere}
 
-#srk footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;padding-block:56px 0;font-size:14px;color:var(--muted)}
+#srk footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-block:64px 0;font:600 11px/1.4 var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+#srk footer .mark{font-size:16px;color:var(--muted)}
 
-@media (max-width:820px){
-  #srk .hero{grid-template-columns:1fr;gap:28px;align-items:start}
-  #srk .avatar{width:180px}
+@media (max-width:860px){
+  #srk .hero{grid-template-columns:1fr;gap:34px;padding-block:44px 40px}
+  #srk .portrait{width:min(100%,280px)}
+  #srk .cta{flex-direction:column}
+  #srk .btn{width:100%}
+  #srk .card .btn{width:auto}
   #srk .strip{grid-template-columns:1fr 1fr}
   #srk .strip>div:nth-child(3){padding-left:0;border-left:0}
   #srk .strip>div:nth-child(n+3){border-top:1px solid var(--line)}
-  #srk .grid{grid-template-columns:1fr;gap:36px}
-  #srk .worked{grid-template-columns:1fr}
-  #srk .tiles{grid-template-columns:1fr}
-  #srk .rowg{grid-template-columns:96px minmax(0,1fr) 20px;grid-template-areas:"img main arrow" "img meta arrow" "img n arrow";row-gap:6px}
-  #srk .mini{width:96px;grid-area:img}
+  #srk .grid{grid-template-columns:1fr;gap:40px}
+  #srk .rowg{grid-template-columns:100px minmax(0,1fr) 24px;grid-template-areas:"img main arrow" "img meta arrow" "img n arrow";row-gap:6px}
+  #srk .mini{width:100px;grid-area:img}
   #srk .rowg-main{grid-area:main} #srk .rowg-meta{grid-area:meta} #srk .rowg-n{grid-area:n} #srk .rowg .arrow{grid-area:arrow}
+  #srk .sec{flex-wrap:wrap;gap:12px}
+  #srk .sec .rule{display:none}
 }
 @media (max-width:520px){
-  #srk .nav ul{gap:16px;font-size:14px}
-  #srk section{padding-block:52px 0}
-  #srk .shot{border-radius:14px}
+  #srk .nav ul{gap:18px;font-size:10.5px;letter-spacing:.14em}
+  #srk section{padding-block:56px 0}
 }
 @media (prefers-reduced-motion:reduce){#srk *{transition:none!important}}
 """
 
+HAT = '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 21.5 L10.2 9.5 Q10.4 7.5 12.4 7.5 L19.6 7.5 Q21.6 7.5 21.8 9.5 L23 21.5"/><path d="M10 16.5 L22 16.5"/><ellipse cx="16" cy="22.5" rx="12" ry="3.2"/></svg>'
 YT_SVG = '<path d="M23 7.5a3 3 0 00-2.1-2.1C19 5 12 5 12 5s-7 0-8.9.4A3 3 0 001 7.5 31 31 0 00.6 12a31 31 0 00.4 4.5 3 3 0 002.1 2.1C5 19 12 19 12 19s7 0 8.9-.4a3 3 0 002.1-2.1 31 31 0 00.4-4.5 31 31 0 00-.4-4.5zM9.8 15.1V8.9l5.4 3.1z"/>'
 TW_SVG = '<path d="M4.3 2L2.5 6.4v15.2h5.2V24h3l2.6-2.4h4.2L23 15.9V2zm16.6 13l-3.1 3h-5.2l-2.6 2.4V18H5.6V4.1h15.3zM17.6 7.9h-2.1v5.5h2.1zm-5.5 0H10v5.5h2.1z"/>'
 
+def sec(title, note):
+    return f'<div class="sec"><h2>{title}</h2><span class="rule"></span><span class="note">{note}</span></div>'
+
 BODY = f'''<div id="srk">
   <nav class="nav" aria-label="Main">
-    <a class="mark" href="#top">SRools<b>King</b></a>
+    <a class="mark" href="#top">{HAT}SRoolsKing</a>
     <ul><li><a href="#games">Games</a></li><li><a href="#watch">Watch</a></li><li><a href="#contact">Contact</a></li></ul>
   </nav>
 
   <header class="hero" id="top">
     <div class="hero-copy">
-      <span class="eyebrow">Roblox builder · Brooklyn, NY</span>
-      <h1>I build Roblox tycoons.</h1>
-      <p class="lede">Founder of <b>Golden Eagle Studios</b> and <b>Peregrine Falcon Studios</b>. Twelve games of my own since 2020, from <b>Ultimate Modern House Tycoon</b> to <b>Ultimate Mansion Tycoon</b>, and part of the team behind <b>House Tycoon 2</b>.</p>
+      <span class="eyebrow">Founder · Golden Eagle Studios · Peregrine Falcon Studios</span>
+      <h1>I build <em class="gold">video games.</em></h1>
+      <p class="lede">Roblox tycoons since 2020, from <b>Ultimate Modern House Tycoon</b> to <b>Ultimate Mansion Tycoon</b> and <b>Billionaire House Tycoon</b>, plus builds for other studios. Based in Brooklyn, NY.</p>
       <div class="cta">
-        <a class="btn" href="https://www.roblox.com/games/127633247396147" target="_blank" rel="noopener">Play the latest <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg></a>
+        <a class="btn" href="https://www.roblox.com/games/127633247396147" target="_blank" rel="noopener">Play the latest<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg></a>
         <a class="btn ghost" href="#watch">Watch</a>
       </div>
     </div>
-    <div class="avatar">
-      <span class="fb" aria-hidden="true">SR</span>
+    <div class="portrait">
+      <span class="fb" aria-hidden="true">S</span>
       <img src="{AVATAR}" alt="SRoolsKing's Roblox avatar" data-avatar onerror="this.remove()">
       <span class="tag mono">@SRoolsKing</span>
     </div>
   </header>
 
   <dl class="strip" aria-label="Totals across every game">
-    <div><dd id="t-visits">{n(all_visits)}</dd><dt>Total visits</dt></div>
+    <div><dd class="gold" id="t-visits">{n(all_visits)}</dd><dt>Total visits</dt></div>
     <div><dd id="t-favs">{n(all_favs)}</dd><dt>Favorites</dt></div>
-    <div><dd>{len(GAMES) + len(WORKED_ON)}</dd><dt>Games</dt></div>
+    <div><dd>{len(GAMES) + len(WORKED_ON)}</dd><dt>Games shipped</dt></div>
     <div><dd>2020</dd><dt>Building since</dt></div>
   </dl>
-  <div class="split"><span><b id="t-own">{n(own_visits)}</b> on my own games, incl. unlisted projects</span><span><b id="t-worked">{n(w["visits"])}</b> on House Tycoon 2</span><span><span class="dot" id="dot"></span><span id="live-text">Stats as of {SNAPSHOT}</span></span></div>
+  <div class="split"><span><b id="t-own">{n(own_visits)}</b> on my own games</span><span><b id="t-worked">{n(w["visits"])}</b> on games built for other studios</span><span><span class="dot" id="dot"></span><span id="live-text">Stats as of {SNAPSHOT}</span></span></div>
 
   <section id="games">
-    <div class="sec"><h2>New</h2><span class="note">In beta, updated often</span></div>
+    {sec("New", "In beta, updated often")}
     <div class="grid">
 {chr(10).join(card(g) for g in new_games)}
     </div>
   </section>
 
   <section>
-    <div class="sec"><h2>Most played</h2><span class="note">Over a million visits each</span></div>
+    {sec("Most played", "Over a million visits each")}
     <div class="grid">
 {chr(10).join(card(g) for g in big)}
     </div>
   </section>
 
   <section>
-    <div class="sec"><h2>More</h2><span class="note">Smaller builds and hangouts</span></div>
+    {sec("More", "Smaller builds and hangouts")}
     <div class="rows">
 {chr(10).join(row(g) for g in rest)}
     </div>
   </section>
 
-  <section id="worked">
-    <div class="sec"><h2>Worked on</h2><span class="note">Other teams' games I've built for</span></div>
-    <div class="worked" data-u="{w["u"]}">
-      <a href="{wurl}" target="_blank" rel="noopener" class="shot-link" aria-label="Play House Tycoon 2">{shot(w)}</a>
-      <div class="cap">
-        <div class="cap-top"><h3>{esc(w["name"])}</h3><span class="year">{w["year"]}</span></div>
-        <p>{esc(w["blurb"])}</p>
-        <div class="chips"><span class="chip live">Live</span><span class="chip">{esc(w["by"])}</span></div>
-        <div class="big"><span data-k="visits">{n(w["visits"])}</span><small><span data-k="favs">{n(w["favs"])}</span> favorites · <span data-k="playing">{n(w["playing"])}</span> playing now</small></div>
-        <a class="btn sm" href="{wurl}" target="_blank" rel="noopener">Play <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg></a>
-      </div>
-    </div>
-  </section>
-
   <section id="watch">
-    <div class="sec"><h2>Watch</h2><span class="note">Dev logs, builds, live sessions and FTB</span></div>
+    {sec("Watch", "Dev logs, builds, live sessions and FTB")}
     <div class="tiles">
       <a class="tile" href="{YT["url"]}" target="_blank" rel="noopener">
-        <span class="ic" style="background:#FF0033"><svg viewBox="0 0 24 24" aria-hidden="true">{YT_SVG}</svg></span>
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">{YT_SVG}</svg></span>
         <span class="t"><b>YouTube</b><span>{YT["handle"]} · since {YT["since"]}</span>
           <span class="stats"><span><b id="yt-subs">{n(YT["subs"])}</b> subscribers</span><span><b id="yt-videos">{n(YT["videos"])}</b> videos</span><span><b id="yt-views">{n(YT["views"])}</b> views</span></span></span>
         <span class="arrow" aria-hidden="true">↗</span>
       </a>
       <a class="tile" href="{FTB["url"]}" target="_blank" rel="noopener">
-        <span class="ic" style="background:#FF0033"><svg viewBox="0 0 24 24" aria-hidden="true">{YT_SVG}</svg></span>
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">{YT_SVG}</svg></span>
         <span class="t"><b>FTB</b><span>{FTB["handle"]} · {FTB["role"]}</span>
           <span class="stats"><span><b id="ftb-subs">{n(FTB["subs"])}</b> subscribers</span><span><b id="ftb-videos">{n(FTB["videos"])}</b> videos</span><span id="ftb-views-wrap" hidden><b id="ftb-views">0</b> views</span></span></span>
         <span class="arrow" aria-hidden="true">↗</span>
       </a>
       <a class="tile" href="{TW["url"]}" target="_blank" rel="noopener">
-        <span class="ic" style="background:#9146FF"><svg viewBox="0 0 24 24" aria-hidden="true">{TW_SVG}</svg></span>
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">{TW_SVG}</svg></span>
         <span class="t"><b>Twitch<span class="liv" id="tw-live">LIVE</span></b><span>{TW["handle"]}</span>
           <span class="stats"><span><b id="tw-followers">{n(TW["followers"])}</b> followers</span><span id="tw-uptime" hidden></span></span></span>
         <span class="arrow" aria-hidden="true">↗</span>
@@ -370,13 +359,13 @@ BODY = f'''<div id="srk">
   </section>
 
   <section id="contact">
-    <div class="sec"><h2>Contact</h2><span class="note">Business, collabs, commissions</span></div>
+    {sec("Contact", "Business, collabs, commissions")}
     <div class="rows">
 {chr(10).join(f'      <a class="row" href="{u}" target="_blank" rel="noopener"><span class="l"><b>{esc(a)}</b><span>{esc(b)}</span></span><span class="arrow" aria-hidden="true">→</span></a>' for a,b,u in CONTACT)}
     </div>
   </section>
 
-  <footer><span>© 2026 SRoolsKing</span><span>sroolsking.com</span></footer>
+  <footer><span class="mark">{HAT}SRoolsKing</span><span>© 2026 · sroolsking.com</span></footer>
 </div>'''
 
 UNIVERSES = [g["u"] for g in GAMES] + [g["u"] for g in WORKED_ON]
@@ -403,12 +392,12 @@ JS = r"""
     if (!gr || !gr.data) return;
     var own = 0, worked = 0, favs = 0;
     gr.data.forEach(function(d){
+      if (WORKED.indexOf(d.id) >= 0) worked += d.visits; else own += d.visits;
+      favs += d.favoritedCount;
       var box = root.querySelector('[data-u="' + d.id + '"]'); if (!box) return;
       set('[data-u="' + d.id + '"] [data-k="visits"]', d.visits);
       set('[data-u="' + d.id + '"] [data-k="favs"]', d.favoritedCount);
       var p = box.querySelector(".playing"); if (p){ p.hidden = !d.playing; } set('[data-u="' + d.id + '"] [data-k="playing"]', d.playing);
-      if (WORKED.indexOf(d.id) >= 0) worked += d.visits; else own += d.visits;
-      favs += d.favoritedCount;
     });
     if (gr.data.length === OWN.length + WORKED.length){
       own += UNLISTED_VISITS; favs += UNLISTED_FAVS;
@@ -457,17 +446,10 @@ JS = r"""
 </script>
 """ % (json.dumps([g["u"] for g in GAMES]), json.dumps([g["u"] for g in WORKED_ON]), json.dumps(YT["channel_id"]), json.dumps(FTB["channel_id"]), json.dumps(TW["login"]), UNLISTED_VISITS, UNLISTED_FAVS)
 
-FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Schibsted+Grotesk:wght@400;500;600&display=swap">'
-HEAD = f'<title>SRoolsKing</title>\n<meta name="description" content="SRoolsKing, Roblox builder at Golden Eagle Studios. {compact(all_visits)} visits across tycoons like Ultimate Mansion Tycoon and House Tycoon 2. Games, YouTube, Twitch and contact.">\n{FONTS}\n<style>{CSS}</style>'
+FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,600;1,6..96,500&family=Manrope:wght@400;600;700&display=swap">'
+HEAD = f'<title>SRoolsKing</title>\n<meta name="description" content="SRoolsKing, founder of Golden Eagle Studios and Peregrine Falcon Studios. {compact(all_visits)} visits across Roblox tycoons like Ultimate Mansion Tycoon. Games, YouTube, Twitch and contact.">\n{FONTS}\n<style>{CSS}</style>'
 
 out = pathlib.Path(__file__).parent
 (out / "srk.html").write_text(HEAD + "\n\n" + BODY + "\n" + JS)
-(out / "index.html").write_text('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n' + HEAD + '\n</head>\n<body>\n' + BODY + "\n" + JS + '</body>\n</html>\n')
-(out / "squarespace-block.html").write_text(FONTS + "\n<style>" + CSS + "</style>\n" + BODY + "\n" + JS)
-(out / "squarespace-custom.css").write_text("""/* SRoolsKing.com: let the Code Block page run edge to edge and hide the Squarespace chrome around it. */
-#header, #footer-sections, .header, .site-footer, .sqs-announcement-bar-dropzone { display: none !important; }
-.page-section .content-wrapper, .sqs-layout .sqs-row, .sqs-block, .sqs-block-code { padding: 0 !important; margin: 0 !important; max-width: none !important; }
-.page-section { padding: 0 !important; min-height: 0 !important; }
-.sqs-block-code .sqs-block-content { padding: 0 !important; }
-""")
+(out / "index.html").write_text('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="theme-color" content="#0A0A0B">\n' + HEAD + '\n</head>\n<body>\n' + BODY + "\n" + JS + '</body>\n</html>\n')
 print("own", own_visits, "all", all_visits, "favs", all_favs)
