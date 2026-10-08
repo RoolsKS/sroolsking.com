@@ -41,10 +41,10 @@ WORKED_ON = [
   dict(u=3746418487, p=10224049386, name="House Tycoon 2", by="Haza Games", year="2022", date="Jul 2022", visits=336096741, favs=414643, playing=1998, grad="#0E7490,#67E8F9", thumb="ebfea0a757a60f8188be4dec9fc937d2",
        blurb="Haza Games' house tycoon. I'm part of the team behind it."),
 ]
-YT = dict(url="https://www.youtube.com/@sroolsking", handle="@sroolsking", channel_id="UCxVNuXOtvIn214EDRwgAgPQ", uploads="UULFxVNuXOtvIn214EDRwgAgPQ", subs=986, videos=151, views=349226, since="Jan 2020")
+YT = dict(url="https://www.youtube.com/@sroolsking", handle="@sroolsking", channel_id="UCxVNuXOtvIn214EDRwgAgPQ", uploads="UULFxVNuXOtvIn214EDRwgAgPQ", popular="UULPxVNuXOtvIn214EDRwgAgPQ", subs=986, videos=151, views=349226, since="Jan 2020")
 TW = dict(url="https://www.twitch.tv/sroolsking", handle="twitch.tv/sroolsking", login="sroolsking", followers=159)
 YT2 = dict(url="https://www.youtube.com/@sroolsking2.0", handle="@SRoolsKing2.0", channel_id="UCqcC3xK1ZJtHaY0Vwz7sTZg", subs=53, role="Reaction channel")
-FTB = dict(url="https://www.youtube.com/@FTBVision", handle="@FTBVision", channel_id="UC8OVbnfqSap98PcS69iWfgg", subs=125, videos=34, role="Founder, director and manager")
+FTB = dict(url="https://www.youtube.com/@FTBVision", handle="@FTBVision", channel_id="UC8OVbnfqSap98PcS69iWfgg", subs=125, videos=34, role="Entertainment with friends · founder, director, manager")
 CONTACT = [
   ("Discord", "discord.gg/WewVqAu", "https://discord.gg/WewVqAu"),
   ("Instagram", "@sroolsking_", "https://www.instagram.com/sroolsking_"),
@@ -79,7 +79,7 @@ def shot(g, cls="shot"):
 
 
 
-HAT = '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 21.5 L10.2 9.5 Q10.4 7.5 12.4 7.5 L19.6 7.5 Q21.6 7.5 21.8 9.5 L23 21.5"/><path d="M10 16.5 L22 16.5"/><ellipse cx="16" cy="22.5" rx="12" ry="3.2"/></svg>'
+HAT = '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 22.5 L4 10.5 L10.8 15.8 L16 7.5 L21.2 15.8 L28 10.5 L26 22.5 Z"/><path d="M6 22.5 H26"/><path d="M6.6 26.2 H25.4"/><circle cx="4" cy="9" r="1.6"/><circle cx="16" cy="5.9" r="1.6"/><circle cx="28" cy="9" r="1.6"/><circle cx="16" cy="19" r="1.4"/></svg>'   # king crown
 YT_SVG = '<path d="M23 7.5a3 3 0 00-2.1-2.1C19 5 12 5 12 5s-7 0-8.9.4A3 3 0 001 7.5 31 31 0 00.6 12a31 31 0 00.4 4.5 3 3 0 002.1 2.1C5 19 12 19 12 19s7 0 8.9-.4a3 3 0 002.1-2.1 31 31 0 00.4-4.5 31 31 0 00-.4-4.5zM9.8 15.1V8.9l5.4 3.1z"/>'
 TW_SVG = '<path d="M4.3 2L2.5 6.4v15.2h5.2V24h3l2.6-2.4h4.2L23 15.9V2zm16.6 13l-3.1 3h-5.2l-2.6 2.4V18H5.6V4.1h15.3zM17.6 7.9h-2.1v5.5h2.1zm-5.5 0H10v5.5h2.1z"/>'
 PLAY_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>'
@@ -407,7 +407,7 @@ def footer():
       <div class="foot">
         <div class="foot-brand">
           <a class="brand" href="index.html">{HAT}<span><b>SROOLSKING</b><small>MEDIA · GAMES</small></span></a>
-          <p>Founder of Golden Eagle Studios, Peregrine Falcon Studios, the FTB channel and the Honneur clothing brand. Roblox tycoons played {compact(all_visits)} times.</p>
+          <p>Founder of Golden Eagle Studios, Peregrine Falcon Studios, the FTB channel and the Honneur clothing brand. Video games played {compact(all_visits)} times.</p>
           <div class="socials">
             <a href="{YT["url"]}"{EXT} aria-label="YouTube"><svg viewBox="0 0 24 24" style="fill:#FF0000">{YT_SVG}</svg></a>
             <a href="{TW["url"]}"{EXT} aria-label="Twitch"><svg viewBox="0 0 24 24" style="fill:#9146FF">{TW_SVG}</svg></a>
@@ -428,11 +428,11 @@ def footer():
 home_btns = f'''        <a class="pill" href="{YT["url"]}"{EXT}>{yt_icon} Subscribe on YouTube</a>
         <a class="pill line" href="{TW["url"]}"{EXT}>{tw_icon} Follow on Twitch</a>
         <a class="pill line" href="{DISCORD}"{EXT}>{dc_icon} Join the Discord</a>'''
-home_trust = f'''        <li>{CHECK}Three YouTube channels</li>
+home_trust = f'''        <li>{CHECK}More than three YouTube channels</li>
         <li>{CHECK}Streams on Twitch</li>
         <li>{CHECK}<span><span id="h-visits2">{all_visits // 1000000}</span>M+ Roblox visits</span></li>
         <li>{CHECK}Founder of four studios and brands</li>'''
-home_para = (f'Gaming on <b>YouTube</b>, reactions on <b>SRoolsKing 2.0</b>, the <b>FTB</b> channel, and <b>Twitch</b> when I\'m live. '
+home_para = (f'Gaming on <b>YouTube</b>, reactions on <b>SRoolsKing 2.0</b>, entertainment with friends on <b>FTB</b>, and <b>Twitch</b> when I\'m live. '
              f'<b><span id="h-visits">{all_visits // 1000000}</span> million</b> Roblox visits behind it all.')
 
 BRAND = {"YouTube":"#FF0000", "Twitch":"#9146FF", "Instagram":"radial-gradient(circle at 30% 107%,#FDF497 0%,#FDF497 5%,#FD5949 45%,#D6249F 60%,#285AEB 90%)", "X":"#000000", "Discord":"#5865F2", "Roblox":"#000000"}
@@ -465,17 +465,17 @@ HOME_BODY = f'''<div id="srk">
 
 {nav([("Videos","#latest"),("Channels","#watch"),("Roblox","roblox.html"),("Contact","#contact")], YT["url"], f"{yt_icon} Subscribe")}
 
-{hero("Creator &amp; game developer · Since 2020", 'I build video games.<br><span class="gold">I make content too.</span>', home_para, home_btns, home_trust)}
+{hero("Creator &amp; game developer · Since 2020", 'I build video games.<br><span class="gold">I make contents too.</span>', home_para, home_btns, home_trust)}
 
   <section class="band light" id="latest"><div class="container">
     <div class="head">
       <span class="eyebrow">Latest</span>
-      <h2>Two newest videos</h2>
-      <p>Straight from the main channel. This updates on its own when a new one drops.</p>
+      <h2>Newest and most popular</h2>
+      <p>Straight from the main channel. Both update on their own.</p>
     </div>
     <div class="vids">
-      <div><div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list={YT["uploads"]}&amp;index=0&amp;rel=0" title="Newest video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><span class="vid-tag">Newest</span></div>
-      <div><div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list={YT["uploads"]}&amp;index=1&amp;rel=0" title="Second newest video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><span class="vid-tag">Before that</span></div>
+      <div><div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list={YT["uploads"]}&amp;rel=0" title="Newest video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><span class="vid-tag">Newest</span></div>
+      <div><div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list={YT["popular"]}&amp;rel=0" title="Most popular video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><span class="vid-tag">Most popular</span></div>
     </div>
   </div></section>
 
@@ -483,7 +483,7 @@ HOME_BODY = f'''<div id="srk">
     <div class="head">
       <span class="eyebrow">Watch</span>
       <h2>Three channels and a stream</h2>
-      <p>Gaming on the main channel, reactions on 2.0, FTB for the group, Twitch for live. Counts update live.</p>
+      <p>Gaming on the main channel, reactions on 2.0, entertainment with friends on FTB, Twitch for live. Counts update live.</p>
     </div>
     <div class="tiles two">
 {watch_tiles}
