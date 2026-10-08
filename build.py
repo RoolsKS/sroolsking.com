@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Builds the SRoolsKing site from one data set:
-  srk.html               -> artifact preview (no doctype, per the Artifact page contract)
-  index.html             -> standalone page for any static host
-  squarespace-block.html -> body of a Squarespace Code Block
-  squarespace-custom.css -> paste into Squarespace Design > Custom CSS
+  index.html  -> home: YouTube, Twitch and socials first, with a Roblox summary
+  roblox.html -> the Roblox games, with live visit counts
+  srk.html    -> artifact copy of the home page (no doctype, per the Artifact page contract)
 """
 import json, html, pathlib
 
@@ -44,6 +43,7 @@ WORKED_ON = [
 ]
 YT = dict(url="https://www.youtube.com/@sroolsking", handle="@sroolsking", channel_id="UCxVNuXOtvIn214EDRwgAgPQ", subs=986, videos=151, views=349226, since="Jan 2020")
 TW = dict(url="https://www.twitch.tv/sroolsking", handle="twitch.tv/sroolsking", login="sroolsking", followers=159)
+YT2 = dict(url="https://www.youtube.com/@sroolsking2.0", handle="@SRoolsKing2.0", channel_id="UCqcC3xK1ZJtHaY0Vwz7sTZg", subs=53, role="Reaction channel")
 FTB = dict(url="https://www.youtube.com/@FTBVision", handle="@FTBVision", channel_id="UC8OVbnfqSap98PcS69iWfgg", subs=125, videos=34, role="Founder, director and manager")
 CONTACT = [
   ("Discord", "discord.gg/WewVqAu", "https://discord.gg/WewVqAu"),
@@ -122,11 +122,12 @@ w = WORKED_ON[0]
 HERO_BG = CDN.format(next(g for g in GAMES if g["u"] == 9530317138)["thumb"])
 
 CSS = r"""
-/* Navy + gold + white, in the style of jtprotection.com: full-width bands, a 1140px container, condensed headlines, pill buttons, white cards. Single committed light look with dark bands. */
+/* Deep blue + purple + white, in the style of jtprotection.com: full-width bands, a 1140px container, condensed headlines, pill buttons, white cards. Single committed light look with dark bands. */
 :root{
-  --navy:#05080D; --navy2:#0B1726; --navy3:#11233A; --gold:#C9A24B; --gold-2:#E2BE63; --gold-ink:#1A1306; --gold-soft:rgba(201,162,75,.14);
-  --light:#F5F7FA; --white:#FFFFFF; --ink:#0B1726; --muted:#5B6B7E; --hero-muted:#9FB0C3; --line:#E6EAF0; --line-dark:rgba(255,255,255,.08);
+  --navy:#070B1F; --navy2:#0D1538; --navy3:#172259; --blue:#3D6DFF; --blue-2:#7C9BFF; --purple:#8B5CF6; --purple-2:#B794FF; --accent-ink:#FFFFFF; --blue-soft:rgba(61,109,255,.12); --purple-soft:rgba(139,92,246,.14);
+  --light:#F4F6FF; --white:#FFFFFF; --ink:#0D1538; --muted:#5C6690; --hero-muted:#A9B4DA; --line:#E3E7F6; --line-dark:rgba(255,255,255,.09);
   --live:#2E9E5B; --live-soft:#ECF7EE;
+  --grad:linear-gradient(100deg,var(--blue) 0%,var(--purple) 100%);
   --head:"Barlow Condensed","Oswald",Impact,"Arial Narrow",sans-serif;
   --body:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
@@ -137,14 +138,15 @@ body{background:var(--light);color:var(--ink)}
 #srk{background:var(--light);color:var(--ink);font:400 16px/1.65 var(--body);margin:0;padding:0;overflow-x:hidden}
 #srk *{box-sizing:border-box}
 #srk a{color:inherit;text-decoration:none}
-#srk a:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:999px}
+#srk [hidden]{display:none!important}
+#srk a:focus-visible{outline:3px solid var(--purple);outline-offset:3px;border-radius:999px}
 #srk h1,#srk h2,#srk h3{margin:0;font-family:var(--head);font-weight:600;line-height:1.05;letter-spacing:.005em;text-wrap:balance}
 #srk p{margin:0}
 #srk .container{max-width:1140px;margin:0 auto;padding-inline:24px}
-#srk .eyebrow{display:inline-flex;align-items:center;gap:10px;font:700 12.5px/1.4 var(--body);letter-spacing:2.5px;text-transform:uppercase;color:var(--gold)}
-#srk .eyebrow.dash::before{content:"";width:28px;height:2px;background:var(--gold)}
-#srk .pill{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:700 15px var(--body);padding:15px 28px;border-radius:999px;background:var(--gold);color:var(--gold-ink);border:1.5px solid var(--gold);transition:transform .15s,box-shadow .15s,background .15s;white-space:nowrap}
-#srk .pill:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(201,162,75,.3)}
+#srk .eyebrow{display:inline-flex;align-items:center;gap:10px;font:700 12.5px/1.4 var(--body);letter-spacing:2.5px;text-transform:uppercase;color:var(--purple-2)}
+#srk .eyebrow.dash::before{content:"";width:28px;height:2px;background:var(--purple)}
+#srk .pill{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:700 15px var(--body);padding:15px 28px;border-radius:999px;background:var(--grad);color:var(--accent-ink);border:1.5px solid transparent;transition:transform .15s,box-shadow .15s,background .15s;white-space:nowrap}
+#srk .pill:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(99,86,255,.35)}
 #srk .pill.line{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
 #srk .pill.line:hover{border-color:#fff;box-shadow:none;background:rgba(255,255,255,.06)}
 #srk .pill.sm{padding:11px 20px;font-size:14px}
@@ -154,32 +156,32 @@ body{background:var(--light);color:var(--ink)}
 #srk .topbar{background:var(--navy);color:var(--hero-muted);font-size:13px;border-bottom:1px solid var(--line-dark)}
 #srk .topbar .container{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:38px}
 #srk .topbar .tb-left{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#srk .topbar .tb-left svg{width:15px;height:15px;fill:none;stroke:var(--gold);stroke-width:1.6;flex:none}
+#srk .topbar .tb-left svg{width:15px;height:15px;fill:none;stroke:var(--purple-2);stroke-width:1.6;flex:none}
 #srk .topbar .tb-right{display:flex;gap:22px;white-space:nowrap}
 #srk .topbar a:hover{color:#fff}
-#srk .nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(5,8,13,.98);backdrop-filter:blur(8px);border-bottom:1px solid var(--line-dark)}
+#srk .nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(7,11,31,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--line-dark)}
 #srk .nav .container{display:flex;align-items:center;gap:32px;min-height:76px}
 #srk .brand{display:inline-flex;align-items:center;gap:11px;color:#fff}
-#srk .brand svg{width:34px;height:34px;fill:none;stroke:var(--gold);stroke-width:1.6;stroke-linejoin:round}
+#srk .brand svg{width:34px;height:34px;fill:none;stroke:var(--blue-2);stroke-width:1.6;stroke-linejoin:round}
 #srk .brand b{display:block;font:700 22px/1 var(--head);letter-spacing:.04em}
-#srk .brand small{display:block;font:600 9.5px/1 var(--body);letter-spacing:2.5px;color:var(--gold);margin-top:4px}
+#srk .brand small{display:block;font:600 9.5px/1 var(--body);letter-spacing:2.5px;color:var(--purple-2);margin-top:4px}
 #srk .nav ul{display:flex;gap:28px;list-style:none;margin:0 auto;padding:0;font:600 15px var(--body);color:#D5DEE8}
-#srk .nav ul a:hover{color:var(--gold)}
+#srk .nav ul a:hover{color:var(--blue-2)}
 #srk .nav .pill{margin-left:auto}
 
 /* Hero */
 #srk .hero{position:relative;background:var(--navy2);color:#fff;overflow:hidden;isolation:isolate}
 #srk .hero-bg{position:absolute;inset:-4%;width:108%;height:108%;object-fit:cover;object-position:50% 100%;filter:blur(5px) saturate(.7);opacity:.38;z-index:-2}
-#srk .hero::before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(6,11,20,.78),rgba(6,11,20,.94));z-index:-1}
+#srk .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 80% at 85% 20%,rgba(139,92,246,.35),transparent 60%),radial-gradient(50% 70% at 10% 90%,rgba(61,109,255,.28),transparent 60%),linear-gradient(rgba(7,11,31,.8),rgba(7,11,31,.95));z-index:-1}
 #srk .hero-in{display:flex;flex-direction:column;gap:24px;padding-block:96px 56px;max-width:820px}
 #srk h1{font-size:clamp(46px,7vw,76px);font-weight:600;color:#fff}
-#srk h1 .gold{color:var(--gold)}
+#srk h1 .gold{background:linear-gradient(100deg,var(--blue-2) 0%,var(--purple-2) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 #srk .hero p{font-size:18px;line-height:1.7;color:var(--hero-muted);max-width:58ch}
 #srk .hero p b{color:#fff;font-weight:600}
 #srk .btns{display:flex;flex-wrap:wrap;gap:12px}
 #srk .trust{display:flex;flex-wrap:wrap;gap:14px 30px;list-style:none;margin:0;padding:28px 0 0;border-top:1px solid var(--line-dark);font:600 14px var(--body);color:#D5DEE8}
 #srk .trust li{display:inline-flex;align-items:center;gap:8px}
-#srk .trust svg{width:16px;height:16px;fill:var(--gold)}
+#srk .trust svg{width:16px;height:16px;fill:var(--purple-2)}
 #srk .hero .container{position:relative}
 
 /* Bands */
@@ -205,7 +207,7 @@ body{background:var(--light);color:var(--ink)}
 #srk .card-b{display:flex;flex-direction:column;gap:12px;padding:22px 24px 26px}
 #srk .card-t{display:flex;justify-content:space-between;align-items:center;gap:12px}
 #srk .card h3{font-size:28px}
-#srk .chip{font:700 11px/1 var(--body);letter-spacing:1.5px;text-transform:uppercase;padding:7px 11px;border-radius:999px;background:var(--gold-soft);color:#8A6A1E;flex:none}
+#srk .chip{font:700 11px/1 var(--body);letter-spacing:1.5px;text-transform:uppercase;padding:7px 11px;border-radius:999px;background:var(--purple-soft);color:#6D3FD6;flex:none}
 #srk .chip.live{background:var(--live-soft);color:var(--live)}
 #srk .card p{color:var(--muted);font-size:15px}
 #srk .meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}
@@ -221,7 +223,7 @@ body{background:var(--light);color:var(--ink)}
 /* Stats band */
 #srk .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 #srk .stat{background:var(--navy2);border:1px solid var(--line-dark);border-radius:16px;padding:28px 24px;text-align:center;display:flex;flex-direction:column;gap:8px}
-#srk .stat b{font:700 clamp(36px,4.4vw,56px)/1 var(--head);color:var(--gold);font-variant-numeric:tabular-nums}
+#srk .stat b{font:700 clamp(36px,4.4vw,56px)/1 var(--head);background:linear-gradient(100deg,var(--blue-2) 0%,var(--purple-2) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
 #srk .stat span{font:600 12.5px var(--body);letter-spacing:2px;text-transform:uppercase;color:var(--hero-muted)}
 #srk .split{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 32px;margin-top:26px;font-size:14px;color:var(--hero-muted)}
 #srk .split b{color:#fff;font-weight:600;font-variant-numeric:tabular-nums}
@@ -230,14 +232,22 @@ body{background:var(--light);color:var(--ink)}
 
 /* Watch tiles */
 #srk .tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+#srk .tiles.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+#srk .tiles.four{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
 #srk .tile{background:var(--white);border-radius:16px;padding:26px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(11,23,38,.04),0 10px 30px rgba(11,23,38,.06);transition:transform .2s,box-shadow .2s;min-width:0}
 #srk .tile:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(11,23,38,.12)}
-#srk .ic{width:52px;height:52px;border-radius:12px;background:var(--navy3);display:grid;place-items:center}
-#srk .ic svg{width:24px;height:24px;fill:var(--gold)}
+#srk .ic{width:52px;height:52px;border-radius:12px;background:var(--grad);display:grid;place-items:center}
+#srk .ic svg{width:24px;height:24px;fill:#fff}
 #srk .tile h3{font-size:26px}
 #srk .tile .sub{font-size:14px;color:var(--muted);overflow-wrap:anywhere}
-#srk .tile .stats-l{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13.5px;color:var(--muted);padding-top:6px;border-top:1px solid var(--line)}
-#srk .tile .stats-l b{color:var(--ink);font:700 20px/1 var(--head);font-variant-numeric:tabular-nums;margin-right:4px}
+#srk .tile .stats-l{display:flex;flex-wrap:wrap;gap:10px 28px;font-size:12.5px;color:var(--muted);padding-top:14px;border-top:1px solid var(--line)}
+#srk .tile .stats-l>span{display:flex;flex-direction:column;gap:3px}
+#srk .tile .stats-l b{color:var(--ink);font:700 26px/1 var(--head);font-variant-numeric:tabular-nums}
+#srk .tile .go{margin-top:auto;display:inline-flex;align-items:center;gap:8px;padding-top:4px;font:700 14px var(--body);color:var(--blue)}
+#srk .tile:hover .go{color:var(--purple)}
+#srk .tile .go svg{width:16px;height:16px;fill:currentColor;transition:transform .15s}
+#srk .tile:hover .go svg{transform:translateX(3px)}
+#srk .btns.center{justify-content:center;margin-top:36px}
 #srk .liv{display:none;font:700 10px/1 var(--body);letter-spacing:1.5px;padding:4px 7px;border-radius:999px;background:#C8102E;color:#fff;vertical-align:middle;margin-left:10px}
 #srk .liv.on{display:inline-block}
 
@@ -248,11 +258,11 @@ body{background:var(--light);color:var(--ink)}
 #srk .two p{color:var(--muted);font-size:17px}
 #srk .ticks{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;font-weight:500}
 #srk .ticks li{display:flex;align-items:center;gap:10px}
-#srk .ticks svg{width:18px;height:18px;fill:var(--gold)}
+#srk .ticks svg{width:18px;height:18px;fill:var(--purple)}
 #srk .links{display:flex;flex-wrap:wrap;gap:12px;background:var(--light);border-radius:18px;padding:22px}
 #srk .link{display:inline-flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--line);border-radius:999px;padding:12px 18px 12px 14px;font:600 14px var(--body);color:var(--ink);transition:border-color .15s,transform .15s}
-#srk .link:hover{border-color:var(--gold);transform:translateY(-2px)}
-#srk .link svg{width:18px;height:18px;fill:var(--gold)}
+#srk .link:hover{border-color:var(--purple);transform:translateY(-2px)}
+#srk .link svg{width:18px;height:18px;fill:var(--blue)}
 #srk .link small{color:var(--muted);font-weight:500}
 
 /* Footer */
@@ -260,11 +270,11 @@ body{background:var(--light);color:var(--ink)}
 #srk .foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;padding-block:64px 44px}
 #srk .foot h4{margin:0 0 14px;font:700 12.5px var(--body);letter-spacing:2.5px;text-transform:uppercase;color:#fff}
 #srk .foot ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
-#srk .foot a:hover{color:var(--gold)}
+#srk .foot a:hover{color:var(--blue-2)}
 #srk .foot-brand{display:flex;flex-direction:column;gap:16px;align-items:flex-start;line-height:1.6}
 #srk .socials{display:flex;gap:10px}
 #srk .socials a{width:36px;height:36px;border-radius:50%;border:1px solid var(--line-dark);display:grid;place-items:center;color:#fff}
-#srk .socials a:hover{border-color:var(--gold);color:var(--gold)}
+#srk .socials a:hover{border-color:var(--purple-2);color:var(--purple-2)}
 #srk .socials svg{width:16px;height:16px;fill:currentColor}
 #srk .foot-bottom{border-top:1px solid var(--line-dark);padding-block:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:13px}
 #srk .fab{position:fixed;right:22px;bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:30;box-shadow:0 10px 30px rgba(0,0,0,.25)}
@@ -272,7 +282,8 @@ body{background:var(--light);color:var(--ink)}
 @media (max-width:900px){
   #srk .grid{grid-template-columns:1fr}
   #srk .stats{grid-template-columns:1fr 1fr}
-  #srk .tiles{grid-template-columns:1fr}
+  #srk .tiles,#srk .tiles.two{grid-template-columns:1fr}
+  #srk .tiles.four{grid-template-columns:1fr 1fr}
   #srk .two{grid-template-columns:1fr;gap:32px}
   #srk .foot{grid-template-columns:1fr 1fr;gap:32px}
   #srk .foot-brand{grid-column:1/-1}
@@ -285,6 +296,8 @@ body{background:var(--light);color:var(--ink)}
   #srk .btns{flex-direction:column}
   #srk .btns .pill{width:100%}
   #srk .stats{grid-template-columns:1fr}
+  #srk .tiles.four{gap:12px}
+  #srk .tiles.four .tile{padding:20px 18px}
   #srk .foot{grid-template-columns:1fr}
   #srk .nav .container{min-height:66px}
   #srk .brand small{display:none}
@@ -293,12 +306,13 @@ body{background:var(--light);color:var(--ink)}
 @media (prefers-reduced-motion:reduce){#srk *{transition:none!important}}
 """
 
-def tile(name, sub, icon, stats, href, badge=""):
+def tile(name, sub, icon, stats, href, badge="", go="Subscribe"):
+    stats_html = f'\n        <span class="stats-l">{stats}</span>' if stats else ""
     return f'''      <a class="tile" href="{href}" target="_blank" rel="noopener">
         <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">{icon}</svg></span>
         <h3>{name}{badge}</h3>
-        <span class="sub">{sub}</span>
-        <span class="stats-l">{stats}</span>
+        <span class="sub">{sub}</span>{stats_html}
+        <span class="go">{go} {ARROW_SVG}</span>
       </a>'''
 
 def link(label, sub, url):
@@ -306,38 +320,189 @@ def link(label, sub, url):
 
 LATEST = next(g for g in GAMES if g["u"] == 10767645246)
 LATEST_URL = f'https://www.roblox.com/games/{LATEST["p"]}'
+DISCORD = "https://discord.gg/WewVqAu"
+EXT = ' target="_blank" rel="noopener"'
+yt_icon = f'<svg viewBox="0 0 24 24" aria-hidden="true">{YT_SVG}</svg>'
+tw_icon = f'<svg viewBox="0 0 24 24" aria-hidden="true">{TW_SVG}</svg>'
+dc_icon = f'<svg viewBox="0 0 24 24" aria-hidden="true">{ICONS["Discord"]}</svg>'
 
-BODY = f'''<div id="srk">
-  <div class="topbar"><div class="container">
-    <span class="tb-left">{HAT}Founder · Golden Eagle Studios · Peregrine Falcon Studios</span>
-    <span class="tb-right"><a href="https://discord.gg/WewVqAu" target="_blank" rel="noopener">Discord</a><a href="{YT["url"]}" target="_blank" rel="noopener">YouTube</a><span>Brooklyn, NY</span></span>
-  </div></div>
+# ---------- shared blocks ----------
+def topbar():
+    return f'''  <div class="topbar"><div class="container">
+    <span class="tb-left">{HAT}Founder · Golden Eagle Studios · Peregrine Falcon Studios · FTB · Honneur</span>
+    <span class="tb-right"><a href="{DISCORD}"{EXT}>Discord</a><a href="{YT["url"]}"{EXT}>YouTube</a><span>Brooklyn, NY</span></span>
+  </div></div>'''
 
-  <nav class="nav" aria-label="Main"><div class="container">
-    <a class="brand" href="#top">{HAT}<span><b>SROOLSKING</b><small>GAMES · MEDIA</small></span></a>
-    <ul><li><a href="#games">Games</a></li><li><a href="#watch">Watch</a></li><li><a href="#contact">Contact</a></li></ul>
-    <a class="pill" href="{LATEST_URL}" target="_blank" rel="noopener">Play the latest</a>
-  </div></nav>
+def nav(links, cta_href, cta_html, home="#top"):
+    lis = "".join(f'<li><a href="{h}">{t}</a></li>' for t, h in links)
+    return f'''  <nav class="nav" aria-label="Main"><div class="container">
+    <a class="brand" href="{home}">{HAT}<span><b>SROOLSKING</b><small>MEDIA · GAMES</small></span></a>
+    <ul>{lis}</ul>
+    <a class="pill" href="{cta_href}"{EXT}>{cta_html}</a>
+  </div></nav>'''
 
-  <header class="hero" id="top">
+def hero(eyebrow, h1, para, btns, trust):
+    return f'''  <header class="hero" id="top">
     <img class="hero-bg" src="{HERO_BG}" alt="" data-thumb="9530317138" onerror="this.remove()">
     <div class="container"><div class="hero-in">
-      <span class="eyebrow dash">Brooklyn, NY · Building since 2020</span>
-      <h1>I build video games.<br><span class="gold"><span id="h-visits">{all_visits // 1000000}</span> million visits and counting.</span></h1>
-      <p>Roblox tycoons from <b>Ultimate Modern House Tycoon</b> to <b>Ultimate Mansion Tycoon</b> and <b>Billionaire House Tycoon</b>, plus builds for other studios. Every number on this page is live from Roblox.</p>
+      <span class="eyebrow dash">{eyebrow}</span>
+      <h1>{h1}</h1>
+      <p>{para}</p>
       <div class="btns">
-        <a class="pill" href="{LATEST_URL}" target="_blank" rel="noopener">Play the latest {ARROW_SVG}</a>
-        <a class="pill line" href="{YT["url"]}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true">{YT_SVG}</svg> Watch on YouTube</a>
-        <a class="pill line" href="https://discord.gg/WewVqAu" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true">{ICONS["Discord"]}</svg> Join the Discord</a>
+{btns}
       </div>
       <ul class="trust">
-        <li>{CHECK}Founder, two Roblox studios</li>
-        <li>{CHECK}{len(GAMES) + len(WORKED_ON)} games shipped</li>
-        <li>{CHECK}Xbox, mobile and PC</li>
-        <li>{CHECK}Stats live from Roblox</li>
+{trust}
       </ul>
     </div></div>
-  </header>
+  </header>'''
+
+def stats_band(sec_id, eyebrow, title, intro="", after=""):
+    intro_html = f'\n      <p>{intro}</p>' if intro else ""
+    return f'''  <section class="band navy" id="{sec_id}"><div class="container">
+    <div class="head">
+      <span class="eyebrow">{eyebrow}</span>
+      <h2>{title}</h2>{intro_html}
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="t-visits">{n(all_visits)}</b><span>Total visits</span></div>
+      <div class="stat"><b id="t-favs">{n(all_favs)}</b><span>Favorites</span></div>
+      <div class="stat"><b>{len(GAMES) + len(WORKED_ON)}</b><span>Games shipped</span></div>
+      <div class="stat"><b>2020</b><span>Building since</span></div>
+    </div>
+    <div class="split"><span><b id="t-own">{n(own_visits)}</b> on my own games</span><span><b id="t-worked">{n(w["visits"])}</b> on games built for other studios</span><span><span class="dot" id="dot"></span><span id="live-text">Stats as of {SNAPSHOT}</span></span></div>{after}
+  </div></section>'''
+
+def contact_section():
+    return f'''  <section class="band white" id="contact"><div class="container two">
+    <div class="copy">
+      <span class="eyebrow dash">Get in touch</span>
+      <h2>Let's build something</h2>
+      <p>Business, collabs, commissions and studio work. Discord is the fastest way to reach me; the rest are below.</p>
+      <ul class="ticks">
+        <li>{CHECK}Roblox builds, maps and tycoon systems</li>
+        <li>{CHECK}Thumbnails, icons and GFX</li>
+        <li>{CHECK}Content and collabs</li>
+      </ul>
+    </div>
+    <div class="links">
+{chr(10).join("      " + link(a, b, u) for a,b,u in CONTACT)}
+    </div>
+  </div></section>'''
+
+def footer():
+    games_links = "".join(f'<li><a href="https://www.roblox.com/games/{g["p"]}"{EXT}>{esc(g["name"])}</a></li>' for g in new_games + big)
+    return f'''  <footer>
+    <div class="container">
+      <div class="foot">
+        <div class="foot-brand">
+          <a class="brand" href="index.html">{HAT}<span><b>SROOLSKING</b><small>MEDIA · GAMES</small></span></a>
+          <p>Founder of Golden Eagle Studios, Peregrine Falcon Studios, FTB and Honneur. Roblox tycoons played {compact(all_visits)} times, from Brooklyn, NY.</p>
+          <div class="socials">
+            <a href="{YT["url"]}"{EXT} aria-label="YouTube"><svg viewBox="0 0 24 24">{YT_SVG}</svg></a>
+            <a href="{TW["url"]}"{EXT} aria-label="Twitch"><svg viewBox="0 0 24 24">{TW_SVG}</svg></a>
+            <a href="https://www.instagram.com/sroolsking_"{EXT} aria-label="Instagram"><svg viewBox="0 0 24 24">{ICONS["Instagram"]}</svg></a>
+            <a href="https://twitter.com/sroolsking"{EXT} aria-label="X"><svg viewBox="0 0 24 24">{ICONS["X"]}</svg></a>
+            <a href="{DISCORD}"{EXT} aria-label="Discord"><svg viewBox="0 0 24 24">{ICONS["Discord"]}</svg></a>
+          </div>
+        </div>
+        <div><h4>Watch</h4><ul><li><a href="{YT["url"]}"{EXT}>YouTube</a></li><li><a href="{YT2["url"]}"{EXT}>SRoolsKing 2.0</a></li><li><a href="{FTB["url"]}"{EXT}>FTB</a></li><li><a href="{TW["url"]}"{EXT}>Twitch</a></li></ul></div>
+        <div><h4>Games</h4><ul><li><a href="roblox.html">All my Roblox games</a></li>{games_links}</ul></div>
+        <div><h4>Studios</h4><ul><li><a href="https://www.roblox.com/groups/11451117/Golden-Eagle-Studios"{EXT}>Golden Eagle Studios</a></li><li><a href="https://www.roblox.com/groups/33416908/Peregrine-Falcon-Studios"{EXT}>Peregrine Falcon Studios</a></li><li><a href="https://shophonneur.com/"{EXT}>Honneur</a></li></ul></div>
+      </div>
+      <div class="foot-bottom"><span>© 2026 SRoolsKing. All rights reserved.</span><span>sroolsking.com</span></div>
+    </div>
+  </footer>'''
+
+# ---------- home: socials first ----------
+home_btns = f'''        <a class="pill" href="{YT["url"]}"{EXT}>{yt_icon} Subscribe on YouTube</a>
+        <a class="pill line" href="{TW["url"]}"{EXT}>{tw_icon} Follow on Twitch</a>
+        <a class="pill line" href="{DISCORD}"{EXT}>{dc_icon} Join the Discord</a>'''
+home_trust = f'''        <li>{CHECK}Three YouTube channels</li>
+        <li>{CHECK}Streams on Twitch</li>
+        <li>{CHECK}<span><span id="h-visits2">{all_visits // 1000000}</span>M+ Roblox visits</span></li>
+        <li>{CHECK}Founder of four studios and brands</li>'''
+home_para = (f'Builds and game updates on <b>YouTube</b>, reactions on <b>SRoolsKing 2.0</b>, the <b>FTB</b> channel, and <b>Twitch</b> when I\'m live. '
+             f'<b><span id="h-visits">{all_visits // 1000000}</span> million</b> Roblox visits behind it all.')
+
+watch_tiles = "\n".join([
+  tile("YouTube", f'{YT["handle"]} · builds and game updates · since {YT["since"]}', YT_SVG,
+       f'<span><b id="yt-subs">{n(YT["subs"])}</b>subscribers</span><span><b id="yt-videos">{n(YT["videos"])}</b>videos</span><span><b id="yt-views">{n(YT["views"])}</b>views</span>', YT["url"]),
+  tile("SRoolsKing 2.0", f'{YT2["handle"]} · {YT2["role"]}', YT_SVG,
+       f'<span><b id="yt2-subs">{n(YT2["subs"])}</b>subscribers</span><span id="yt2-videos-wrap" hidden><b id="yt2-videos">0</b>videos</span><span id="yt2-views-wrap" hidden><b id="yt2-views">0</b>views</span>', YT2["url"]),
+  tile("FTB", f'{FTB["handle"]} · {FTB["role"]}', YT_SVG,
+       f'<span><b id="ftb-subs">{n(FTB["subs"])}</b>subscribers</span><span><b id="ftb-videos">{n(FTB["videos"])}</b>videos</span><span id="ftb-views-wrap" hidden><b id="ftb-views">0</b>views</span>', FTB["url"]),
+  tile("Twitch", f'{TW["handle"]} · live builds', TW_SVG,
+       f'<span><b id="tw-followers">{n(TW["followers"])}</b>followers</span><span id="tw-uptime" hidden></span>', TW["url"], badge='<span class="liv" id="tw-live">LIVE</span>', go="Follow"),
+])
+SOCIALS = [
+  ("Instagram", "@sroolsking_", "https://www.instagram.com/sroolsking_", "Follow"),
+  ("X", "@sroolsking", "https://twitter.com/sroolsking", "Follow"),
+  ("Discord", "discord.gg/WewVqAu", DISCORD, "Join"),
+  ("Roblox", "@SRoolsKing", "https://www.roblox.com/users/1074781327/profile", "Add me"),
+]
+follow_tiles = "\n".join(tile(a, b, ICONS[a], "", u, go=g) for a, b, u, g in SOCIALS)
+
+roblox_cta = f'''
+    <div class="btns center">
+      <a class="pill" href="roblox.html">See the games {ARROW_SVG}</a>
+      <a class="pill line" href="{LATEST_URL}"{EXT}>{PLAY_SVG} Play the latest</a>
+    </div>'''
+
+HOME_BODY = f'''<div id="srk">
+{topbar()}
+
+{nav([("Watch","#watch"),("Follow","#follow"),("Roblox","roblox.html"),("Contact","#contact")], YT["url"], f"{yt_icon} Subscribe")}
+
+{hero("Brooklyn, NY · Creator &amp; game builder", 'I build video games.<br><span class="gold">Watch it happen.</span>', home_para, home_btns, home_trust)}
+
+  <section class="band light" id="watch"><div class="container">
+    <div class="head">
+      <span class="eyebrow">Watch</span>
+      <h2>Three channels and a stream</h2>
+      <p>Builds on the main channel, reactions on 2.0, FTB for the group, Twitch for live. Counts update live.</p>
+    </div>
+    <div class="tiles two">
+{watch_tiles}
+    </div>
+  </div></section>
+
+  <section class="band white" id="follow"><div class="container">
+    <div class="head">
+      <span class="eyebrow">Follow</span>
+      <h2>Everywhere else</h2>
+      <p>Day to day on Instagram and X, the community on Discord, and my Roblox profile.</p>
+    </div>
+    <div class="tiles four">
+{follow_tiles}
+    </div>
+  </div></section>
+
+{stats_band("roblox", "Roblox", "The games side", "Tycoons played by millions, from Ultimate Modern House Tycoon to Billionaire House Tycoon. Every number is live from Roblox.", roblox_cta)}
+
+{contact_section()}
+
+{footer()}
+
+  <a class="pill fab" href="{YT["url"]}"{EXT}>{yt_icon} Subscribe</a>
+</div>'''
+
+# ---------- roblox: the games ----------
+rbx_btns = f'''        <a class="pill" href="{LATEST_URL}"{EXT}>Play the latest {ARROW_SVG}</a>
+        <a class="pill line" href="{YT["url"]}"{EXT}>{yt_icon} Watch on YouTube</a>
+        <a class="pill line" href="{DISCORD}"{EXT}>{dc_icon} Join the Discord</a>'''
+rbx_trust = f'''        <li>{CHECK}Founder of four studios and brands</li>
+        <li>{CHECK}{len(GAMES) + len(WORKED_ON)} games shipped</li>
+        <li>{CHECK}Xbox, mobile and PC</li>
+        <li>{CHECK}Stats live from Roblox</li>'''
+rbx_para = 'Roblox tycoons from <b>Ultimate Modern House Tycoon</b> to <b>Ultimate Mansion Tycoon</b> and <b>Billionaire House Tycoon</b>, plus builds for other studios. Every number on this page is live from Roblox.'
+
+ROBLOX_BODY = f'''<div id="srk">
+{topbar()}
+
+{nav([("Games","#games"),("Numbers","#numbers"),("Contact","#contact"),("Home","index.html")], LATEST_URL, "Play the latest", home="index.html")}
+
+{hero("Roblox · Building since 2020", f'I build video games.<br><span class="gold"><span id="h-visits">{all_visits // 1000000}</span> million visits and counting.</span>', rbx_para, rbx_btns, rbx_trust)}
 
   <section class="band light" id="games"><div class="container">
     <div class="head">
@@ -355,72 +520,13 @@ BODY = f'''<div id="srk">
     </div>
   </div></section>
 
-  <section class="band navy"><div class="container">
-    <div class="head">
-      <span class="eyebrow">By the numbers</span>
-      <h2>Across every game I've built</h2>
-    </div>
-    <div class="stats">
-      <div class="stat"><b id="t-visits">{n(all_visits)}</b><span>Total visits</span></div>
-      <div class="stat"><b id="t-favs">{n(all_favs)}</b><span>Favorites</span></div>
-      <div class="stat"><b>{len(GAMES) + len(WORKED_ON)}</b><span>Games shipped</span></div>
-      <div class="stat"><b>2020</b><span>Building since</span></div>
-    </div>
-    <div class="split"><span><b id="t-own">{n(own_visits)}</b> on my own games</span><span><b id="t-worked">{n(w["visits"])}</b> on games built for other studios</span><span><span class="dot" id="dot"></span><span id="live-text">Stats as of {SNAPSHOT}</span></span></div>
-  </div></section>
+{stats_band("numbers", "By the numbers", "Across every game I've built")}
 
-  <section class="band light" id="watch"><div class="container">
-    <div class="head">
-      <span class="eyebrow">Watch</span>
-      <h2>Dev logs, builds and live sessions</h2>
-      <p>Behind the builds on YouTube, FTB for the group content, and Twitch when I'm live.</p>
-    </div>
-    <div class="tiles">
-{tile("YouTube", f'{YT["handle"]} · since {YT["since"]}', YT_SVG, f'<span><b id="yt-subs">{n(YT["subs"])}</b>subscribers</span><span><b id="yt-videos">{n(YT["videos"])}</b>videos</span><span><b id="yt-views">{n(YT["views"])}</b>views</span>', YT["url"])}
-{tile("FTB", f'{FTB["handle"]} · {FTB["role"]}', YT_SVG, f'<span><b id="ftb-subs">{n(FTB["subs"])}</b>subscribers</span><span><b id="ftb-videos">{n(FTB["videos"])}</b>videos</span><span id="ftb-views-wrap" hidden><b id="ftb-views">0</b>views</span>', FTB["url"])}
-{tile("Twitch", TW["handle"], TW_SVG, f'<span><b id="tw-followers">{n(TW["followers"])}</b>followers</span><span id="tw-uptime" hidden></span>', TW["url"], badge='<span class="liv" id="tw-live">LIVE</span>')}
-    </div>
-  </div></section>
+{contact_section()}
 
-  <section class="band white" id="contact"><div class="container two">
-    <div class="copy">
-      <span class="eyebrow dash">Get in touch</span>
-      <h2>Let's build something</h2>
-      <p>Business, collabs, commissions and studio work. Discord is the fastest way to reach me; the rest are below.</p>
-      <ul class="ticks">
-        <li>{CHECK}Roblox builds, maps and tycoon systems</li>
-        <li>{CHECK}Thumbnails, icons and GFX</li>
-        <li>{CHECK}Content and collabs</li>
-      </ul>
-    </div>
-    <div class="links">
-{chr(10).join("      " + link(a, b, u) for a,b,u in CONTACT)}
-    </div>
-  </div></section>
+{footer()}
 
-  <footer>
-    <div class="container">
-      <div class="foot">
-        <div class="foot-brand">
-          <a class="brand" href="#top">{HAT}<span><b>SROOLSKING</b><small>GAMES · MEDIA</small></span></a>
-          <p>Founder of Golden Eagle Studios and Peregrine Falcon Studios. Roblox tycoons played {compact(all_visits)} times, from Brooklyn, NY.</p>
-          <div class="socials">
-            <a href="https://discord.gg/WewVqAu" target="_blank" rel="noopener" aria-label="Discord"><svg viewBox="0 0 24 24">{ICONS["Discord"]}</svg></a>
-            <a href="https://www.instagram.com/sroolsking_" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24">{ICONS["Instagram"]}</svg></a>
-            <a href="https://twitter.com/sroolsking" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24">{ICONS["X"]}</svg></a>
-            <a href="{YT["url"]}" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24">{YT_SVG}</svg></a>
-            <a href="{TW["url"]}" target="_blank" rel="noopener" aria-label="Twitch"><svg viewBox="0 0 24 24">{TW_SVG}</svg></a>
-          </div>
-        </div>
-        <div><h4>Games</h4><ul>{"".join(f'<li><a href="https://www.roblox.com/games/{g["p"]}" target="_blank" rel="noopener">{esc(g["name"])}</a></li>' for g in new_games + big)}</ul></div>
-        <div><h4>Watch</h4><ul><li><a href="{YT["url"]}" target="_blank" rel="noopener">YouTube</a></li><li><a href="{FTB["url"]}" target="_blank" rel="noopener">FTB</a></li><li><a href="{TW["url"]}" target="_blank" rel="noopener">Twitch</a></li></ul></div>
-        <div><h4>Studios</h4><ul><li><a href="https://www.roblox.com/groups/11451117/Golden-Eagle-Studios" target="_blank" rel="noopener">Golden Eagle Studios</a></li><li><a href="https://www.roblox.com/groups/33416908/Peregrine-Falcon-Studios" target="_blank" rel="noopener">Peregrine Falcon Studios</a></li><li><a href="https://shophonneur.com/" target="_blank" rel="noopener">Honneur</a></li></ul></div>
-      </div>
-      <div class="foot-bottom"><span>© 2026 SRoolsKing. All rights reserved.</span><span>sroolsking.com</span></div>
-    </div>
-  </footer>
-
-  <a class="pill fab" href="{LATEST_URL}" target="_blank" rel="noopener">{PLAY_SVG} Play now</a>
+  <a class="pill fab" href="{LATEST_URL}"{EXT}>{PLAY_SVG} Play now</a>
 </div>'''
 
 UNIVERSES = [g["u"] for g in GAMES] + [g["u"] for g in WORKED_ON]
@@ -429,12 +535,14 @@ JS = r"""
 (function(){
   var root = document.getElementById("srk");
   var OWN = %s, WORKED = %s;
-  var YT_ID = %s, FTB_ID = %s, YT_API_KEY = "";   /* optional: a YouTube Data API key makes the YouTube numbers official */
+  var YT_ID = %s, YT2_ID = %s, FTB_ID = %s, YT_API_KEY = "";   /* optional: a YouTube Data API key makes the YouTube numbers official */
   var TW_LOGIN = %s;
   var UNLISTED_VISITS = %s, UNLISTED_FAVS = %s;   /* private and test projects, counted but not listed */
   var fmt = function(x){ return Number(x).toLocaleString("en-US"); };
   var get = function(u, asText){ return fetch(u).then(function(r){ return r.ok ? (asText ? r.text() : r.json()) : null; }).catch(function(){ return null; }); };
-  function set(sel, v){ var el = root.querySelector(sel); if (el && v != null) el.textContent = fmt(v); }
+  function q(sel){ return root.querySelector(sel); }
+  function set(sel, v){ var el = q(sel); if (el && v != null) el.textContent = fmt(v); }
+  function show(sel){ var el = q(sel); if (el) el.hidden = false; }
 
   /* Roblox: live visits, favorites, playing-now and fresh thumbnails through the public RoProxy mirror. */
   var ids = OWN.concat(WORKED).join(",");
@@ -448,60 +556,74 @@ JS = r"""
     gr.data.forEach(function(d){
       if (WORKED.indexOf(d.id) >= 0) worked += d.visits; else own += d.visits;
       favs += d.favoritedCount;
-      var box = root.querySelector('[data-u="' + d.id + '"]'); if (!box) return;
+      var box = q('[data-u="' + d.id + '"]'); if (!box) return;
       set('[data-u="' + d.id + '"] [data-k="visits"]', d.visits);
       set('[data-u="' + d.id + '"] [data-k="favs"]', d.favoritedCount);
-      var p = box.querySelector(".playing"); if (p){ p.hidden = !d.playing; } set('[data-u="' + d.id + '"] [data-k="playing"]', d.playing);
+      var p = box.querySelector(".playing"); if (p){ p.hidden = !(d.playing >= 50); }   /* playing-now only once a game has 50+ in it */ set('[data-u="' + d.id + '"] [data-k="playing"]', d.playing);
     });
     if (gr.data.length === OWN.length + WORKED.length){
       own += UNLISTED_VISITS; favs += UNLISTED_FAVS;
       set("#t-visits", own + worked); set("#t-favs", favs); set("#t-own", own); set("#t-worked", worked);
-      var h = root.querySelector("#h-visits"); if (h) h.textContent = Math.floor((own + worked) / 1e6);
+      root.querySelectorAll("#h-visits, #h-visits2").forEach(function(h){ h.textContent = Math.floor((own + worked) / 1e6); });
     }
     if (th && th.data) th.data.forEach(function(t){
       var u = t.thumbnails && t.thumbnails[0] && t.thumbnails[0].imageUrl;
       root.querySelectorAll('img[data-thumb="' + t.universeId + '"]').forEach(function(img){ if (u && img.src !== u) img.src = u; });
     });
-    root.querySelector("#dot").classList.add("on");
-    root.querySelector("#live-text").textContent = "Live from Roblox";
+    var dot = q("#dot"); if (dot) dot.classList.add("on");
+    var lt = q("#live-text"); if (lt) lt.textContent = "Live from Roblox";
   });
 
   /* YouTube: official API when a key is set, otherwise a public counter; the numbers in the page are the fallback. */
-  [["yt", YT_ID], ["ftb", FTB_ID]].forEach(function(ch){
+  [["yt", YT_ID], ["yt2", YT2_ID], ["ftb", FTB_ID]].forEach(function(ch){
     var p = ch[0], id = ch[1];
+    if (!q("#" + p + "-subs")) return;
     if (YT_API_KEY){
       get("https://www.googleapis.com/youtube/v3/channels?part=statistics&id=" + id + "&key=" + YT_API_KEY).then(function(j){
         var s = j && j.items && j.items[0] && j.items[0].statistics; if (!s) return;
         set("#" + p + "-subs", s.subscriberCount); set("#" + p + "-videos", s.videoCount); set("#" + p + "-views", s.viewCount);
-        var w = root.querySelector("#" + p + "-views-wrap"); if (w) w.hidden = false;
+        show("#" + p + "-videos-wrap"); show("#" + p + "-views-wrap");
       });
     } else {
       get("https://api.socialcounts.org/youtube-live-subscriber-count/" + id).then(function(j){
         if (!j) return;
         if (j.est_sub) set("#" + p + "-subs", j.est_sub);
         (j.table || []).forEach(function(r){
-          if (/view/i.test(r.name)){ set("#" + p + "-views", r.count); var w = root.querySelector("#" + p + "-views-wrap"); if (w) w.hidden = false; }
-          if (/video/i.test(r.name)) set("#" + p + "-videos", r.count);
+          if (/view/i.test(r.name)){ set("#" + p + "-views", r.count); show("#" + p + "-views-wrap"); }
+          if (/video/i.test(r.name)){ set("#" + p + "-videos", r.count); show("#" + p + "-videos-wrap"); }
         });
       });
     }
   });
 
   /* Twitch: follower count and live status via DecAPI. */
-  get("https://decapi.me/twitch/followcount/" + TW_LOGIN, true).then(function(t){ if (t && /^\d+$/.test(t.trim())) set("#tw-followers", t.trim()); });
-  get("https://decapi.me/twitch/uptime/" + TW_LOGIN, true).then(function(t){
-    if (!t || /offline|error|not found/i.test(t)) return;
-    root.querySelector("#tw-live").classList.add("on");
-    var up = root.querySelector("#tw-uptime"); up.hidden = false; up.textContent = "live for " + t.trim();
-  });
+  if (q("#tw-followers")){
+    get("https://decapi.me/twitch/followcount/" + TW_LOGIN, true).then(function(t){ if (t && /^\d+$/.test(t.trim())) set("#tw-followers", t.trim()); });
+    get("https://decapi.me/twitch/uptime/" + TW_LOGIN, true).then(function(t){
+      if (!t || /offline|error|not found/i.test(t)) return;
+      var tl = q("#tw-live"); if (tl) tl.classList.add("on");
+      var up = q("#tw-uptime"); if (up){ up.hidden = false; up.textContent = "live for " + t.trim(); }
+    });
+  }
 })();
 </script>
-""" % (json.dumps([g["u"] for g in GAMES]), json.dumps([g["u"] for g in WORKED_ON]), json.dumps(YT["channel_id"]), json.dumps(FTB["channel_id"]), json.dumps(TW["login"]), UNLISTED_VISITS, UNLISTED_FAVS)
+""" % (json.dumps([g["u"] for g in GAMES]), json.dumps([g["u"] for g in WORKED_ON]), json.dumps(YT["channel_id"]), json.dumps(YT2["channel_id"]), json.dumps(FTB["channel_id"]), json.dumps(TW["login"]), UNLISTED_VISITS, UNLISTED_FAVS)
 
 FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap">'
-HEAD = f'<title>SRoolsKing</title>\n<meta name="description" content="SRoolsKing, founder of Golden Eagle Studios and Peregrine Falcon Studios. {compact(all_visits)} visits across Roblox tycoons like Ultimate Mansion Tycoon. Games, YouTube, Twitch and contact.">\n{FONTS}\n<style>{CSS}</style>'
+def head(title, desc, path):
+    return (f'<title>{esc(title)}</title>\n<meta name="description" content="{esc(desc)}">\n'
+            f'<meta property="og:title" content="{esc(title)}">\n<meta property="og:description" content="{esc(desc)}">\n<meta property="og:type" content="website">\n'
+            f'<meta property="og:url" content="https://sroolsking.com/{path}">\n<meta property="og:image" content="{HERO_BG}">\n<link rel="canonical" href="https://sroolsking.com/{path}">\n'
+            f'{FONTS}\n<style>{CSS}</style>')
+HOME_HEAD = head("SRoolsKing", f"SRoolsKing on YouTube, Twitch, Instagram and X. Founder of Golden Eagle Studios, Peregrine Falcon Studios, FTB and Honneur, with {compact(all_visits)} Roblox visits behind the content.", "")
+ROBLOX_HEAD = head("Roblox games · SRoolsKing", f"Every Roblox game SRoolsKing has built, with live visit counts. {compact(all_visits)} visits across tycoons like Ultimate Mansion Tycoon and Billionaire House Tycoon.", "roblox.html")
+
+def page(head_html, body):
+    return ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="theme-color" content="#070B1F">\n'
+            + head_html + '\n</head>\n<body style="margin:0">\n' + body + "\n" + JS + '</body>\n</html>\n')
 
 out = pathlib.Path(__file__).parent
-(out / "srk.html").write_text(HEAD + "\n\n" + BODY + "\n" + JS)
-(out / "index.html").write_text('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="theme-color" content="#05080D">\n' + HEAD + '\n</head>\n<body style="margin:0">\n' + BODY + "\n" + JS + '</body>\n</html>\n')
+(out / "srk.html").write_text(HOME_HEAD + "\n\n" + HOME_BODY + "\n" + JS)      # artifact page (no doctype)
+(out / "index.html").write_text(page(HOME_HEAD, HOME_BODY))
+(out / "roblox.html").write_text(page(ROBLOX_HEAD, ROBLOX_BODY))
 print("own", own_visits, "all", all_visits, "favs", all_favs)
