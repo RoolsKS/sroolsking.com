@@ -41,7 +41,7 @@ WORKED_ON = [
   dict(u=3746418487, p=10224049386, name="House Tycoon 2", by="Haza Games", year="2022", date="Jul 2022", visits=336096741, favs=414643, playing=1998, grad="#0E7490,#67E8F9", thumb="ebfea0a757a60f8188be4dec9fc937d2",
        blurb="Haza Games' house tycoon. I'm part of the team behind it."),
 ]
-YT = dict(url="https://www.youtube.com/@sroolsking", handle="@sroolsking", channel_id="UCxVNuXOtvIn214EDRwgAgPQ", subs=986, videos=151, views=349226, since="Jan 2020")
+YT = dict(url="https://www.youtube.com/@sroolsking", handle="@sroolsking", channel_id="UCxVNuXOtvIn214EDRwgAgPQ", uploads="UULFxVNuXOtvIn214EDRwgAgPQ", subs=986, videos=151, views=349226, since="Jan 2020")
 TW = dict(url="https://www.twitch.tv/sroolsking", handle="twitch.tv/sroolsking", login="sroolsking", followers=159)
 YT2 = dict(url="https://www.youtube.com/@sroolsking2.0", handle="@SRoolsKing2.0", channel_id="UCqcC3xK1ZJtHaY0Vwz7sTZg", subs=53, role="Reaction channel")
 FTB = dict(url="https://www.youtube.com/@FTBVision", handle="@FTBVision", channel_id="UC8OVbnfqSap98PcS69iWfgg", subs=125, videos=34, role="Founder, director and manager")
@@ -51,7 +51,7 @@ CONTACT = [
   ("X", "@sroolsking", "https://twitter.com/sroolsking"),
   ("Roblox", "@SRoolsKing", "https://www.roblox.com/users/1074781327/profile"),
   ("Golden Eagle Studios", "Roblox group · in-game rewards for members", "https://www.roblox.com/groups/11451117/Golden-Eagle-Studios"),
-  ("Honneur", "shophonneur.com", "https://shophonneur.com/"),
+  ("Honneur", "Founder · clothing brand · shophonneur.com", "https://shophonneur.com/"),
 ]
 
 def n(x): return f"{x:,}"
@@ -177,7 +177,7 @@ body{background:var(--light);color:var(--ink)}
 #srk h1{font-size:clamp(46px,7vw,76px);font-weight:600;color:#fff}
 #srk h1 .gold{color:var(--sky)}
 #srk .hero p{font-size:18px;line-height:1.7;color:var(--hero-muted);max-width:58ch}
-#srk .hero p b{color:#fff;font-weight:600}
+#srk .hero p b{color:#fff;font-weight:600;font-variant-numeric:tabular-nums}
 #srk .btns{display:flex;flex-wrap:wrap;gap:12px}
 #srk .trust{display:flex;flex-wrap:wrap;gap:14px 30px;list-style:none;margin:0;padding:28px 0 0;border-top:1px solid var(--line-dark);font:600 14px var(--body);color:#D5DEE8}
 #srk .trust li{display:inline-flex;align-items:center;gap:8px}
@@ -230,6 +230,12 @@ body{background:var(--light);color:var(--ink)}
 #srk .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--hero-muted);margin-right:8px;vertical-align:1px}
 #srk .dot.on{background:#43C46F;box-shadow:0 0 0 3px rgba(67,196,111,.2)}
 
+/* Latest videos */
+#srk .vids{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+#srk .vid{position:relative;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--navy3);box-shadow:0 1px 2px rgba(11,23,38,.04),0 10px 30px rgba(11,23,38,.08)}
+#srk .vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+#srk .vid-tag{display:block;margin-top:12px;font:600 13px var(--body);letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+
 /* Watch tiles */
 #srk .tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
 #srk .tiles.two{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -238,6 +244,7 @@ body{background:var(--light);color:var(--ink)}
 #srk .tile:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(11,23,38,.12)}
 #srk .ic{width:52px;height:52px;border-radius:12px;background:var(--sky);display:grid;place-items:center}
 #srk .ic svg{width:24px;height:24px;fill:var(--accent-ink)}
+#srk .ic.brand svg{fill:#fff}
 #srk .tile h3{font-size:26px}
 #srk .tile .sub{font-size:14px;color:var(--muted);overflow-wrap:anywhere}
 #srk .tile .stats-l{display:flex;flex-wrap:wrap;gap:10px 28px;font-size:12.5px;color:var(--muted);padding-top:14px;border-top:1px solid var(--line)}
@@ -282,7 +289,7 @@ body{background:var(--light);color:var(--ink)}
 @media (max-width:900px){
   #srk .grid{grid-template-columns:1fr}
   #srk .stats{grid-template-columns:1fr 1fr}
-  #srk .tiles,#srk .tiles.two{grid-template-columns:1fr}
+  #srk .tiles,#srk .tiles.two,#srk .vids{grid-template-columns:1fr}
   #srk .tiles.four{grid-template-columns:1fr 1fr}
   #srk .two{grid-template-columns:1fr;gap:32px}
   #srk .foot{grid-template-columns:1fr 1fr;gap:32px}
@@ -306,17 +313,20 @@ body{background:var(--light);color:var(--ink)}
 @media (prefers-reduced-motion:reduce){#srk *{transition:none!important}}
 """
 
-def tile(name, sub, icon, stats, href, badge="", go="Subscribe"):
+def tile(name, sub, icon, stats, href, badge="", go="Subscribe", brand=""):
     stats_html = f'\n        <span class="stats-l">{stats}</span>' if stats else ""
+    ic = f'<span class="ic brand" style="background:{brand}">' if brand else '<span class="ic">'
     return f'''      <a class="tile" href="{href}" target="_blank" rel="noopener">
-        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">{icon}</svg></span>
+        {ic}<svg viewBox="0 0 24 24" aria-hidden="true">{icon}</svg></span>
         <h3>{name}{badge}</h3>
         <span class="sub">{sub}</span>{stats_html}
         <span class="go">{go} {ARROW_SVG}</span>
       </a>'''
 
+LINK_COLORS = {"Discord":"#5865F2", "Instagram":"#E1306C", "X":"#000000", "Roblox":"#000000"}
 def link(label, sub, url):
-    return f'<a class="link" href="{url}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true">{ICONS[label]}</svg>{esc(label)}<small>{esc(sub)}</small></a>'
+    st = f' style="fill:{LINK_COLORS[label]}"' if label in LINK_COLORS else ""
+    return f'<a class="link" href="{url}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"{st}>{ICONS[label]}</svg>{esc(label)}<small>{esc(sub)}</small></a>'
 
 LATEST = next(g for g in GAMES if g["u"] == 10767645246)
 LATEST_URL = f'https://www.roblox.com/games/{LATEST["p"]}'
@@ -397,18 +407,18 @@ def footer():
       <div class="foot">
         <div class="foot-brand">
           <a class="brand" href="index.html">{HAT}<span><b>SROOLSKING</b><small>MEDIA · GAMES</small></span></a>
-          <p>Founder of Golden Eagle Studios, Peregrine Falcon Studios, FTB and Honneur. Roblox tycoons played {compact(all_visits)} times.</p>
+          <p>Founder of Golden Eagle Studios, Peregrine Falcon Studios, the FTB channel and the Honneur clothing brand. Roblox tycoons played {compact(all_visits)} times.</p>
           <div class="socials">
-            <a href="{YT["url"]}"{EXT} aria-label="YouTube"><svg viewBox="0 0 24 24">{YT_SVG}</svg></a>
-            <a href="{TW["url"]}"{EXT} aria-label="Twitch"><svg viewBox="0 0 24 24">{TW_SVG}</svg></a>
-            <a href="https://www.instagram.com/sroolsking_"{EXT} aria-label="Instagram"><svg viewBox="0 0 24 24">{ICONS["Instagram"]}</svg></a>
+            <a href="{YT["url"]}"{EXT} aria-label="YouTube"><svg viewBox="0 0 24 24" style="fill:#FF0000">{YT_SVG}</svg></a>
+            <a href="{TW["url"]}"{EXT} aria-label="Twitch"><svg viewBox="0 0 24 24" style="fill:#9146FF">{TW_SVG}</svg></a>
+            <a href="https://www.instagram.com/sroolsking_"{EXT} aria-label="Instagram"><svg viewBox="0 0 24 24" style="fill:#E1306C">{ICONS["Instagram"]}</svg></a>
             <a href="https://twitter.com/sroolsking"{EXT} aria-label="X"><svg viewBox="0 0 24 24">{ICONS["X"]}</svg></a>
-            <a href="{DISCORD}"{EXT} aria-label="Discord"><svg viewBox="0 0 24 24">{ICONS["Discord"]}</svg></a>
+            <a href="{DISCORD}"{EXT} aria-label="Discord"><svg viewBox="0 0 24 24" style="fill:#5865F2">{ICONS["Discord"]}</svg></a>
           </div>
         </div>
         <div><h4>Watch</h4><ul><li><a href="{YT["url"]}"{EXT}>YouTube</a></li><li><a href="{YT2["url"]}"{EXT}>SRoolsKing 2.0</a></li><li><a href="{FTB["url"]}"{EXT}>FTB</a></li><li><a href="{TW["url"]}"{EXT}>Twitch</a></li></ul></div>
         <div><h4>Games</h4><ul><li><a href="roblox.html">All my Roblox games</a></li>{games_links}</ul></div>
-        <div><h4>Studios</h4><ul><li><a href="https://www.roblox.com/groups/11451117/Golden-Eagle-Studios"{EXT}>Golden Eagle Studios</a></li><li><a href="https://www.roblox.com/groups/33416908/Peregrine-Falcon-Studios"{EXT}>Peregrine Falcon Studios</a></li><li><a href="https://shophonneur.com/"{EXT}>Honneur</a></li></ul></div>
+        <div><h4>Studios &amp; brands</h4><ul><li><a href="https://www.roblox.com/groups/11451117/Golden-Eagle-Studios"{EXT}>Golden Eagle Studios</a></li><li><a href="https://www.roblox.com/groups/33416908/Peregrine-Falcon-Studios"{EXT}>Peregrine Falcon Studios</a></li><li><a href="https://shophonneur.com/"{EXT}>Honneur · clothing brand</a></li></ul></div>
       </div>
       <div class="foot-bottom"><span>© 2026 SRoolsKing. All rights reserved.</span><span>sroolsking.com</span></div>
     </div>
@@ -422,18 +432,19 @@ home_trust = f'''        <li>{CHECK}Three YouTube channels</li>
         <li>{CHECK}Streams on Twitch</li>
         <li>{CHECK}<span><span id="h-visits2">{all_visits // 1000000}</span>M+ Roblox visits</span></li>
         <li>{CHECK}Founder of four studios and brands</li>'''
-home_para = (f'Builds and game updates on <b>YouTube</b>, reactions on <b>SRoolsKing 2.0</b>, the <b>FTB</b> channel, and <b>Twitch</b> when I\'m live. '
+home_para = (f'Gaming on <b>YouTube</b>, reactions on <b>SRoolsKing 2.0</b>, the <b>FTB</b> channel, and <b>Twitch</b> when I\'m live. '
              f'<b><span id="h-visits">{all_visits // 1000000}</span> million</b> Roblox visits behind it all.')
 
+BRAND = {"YouTube":"#FF0000", "Twitch":"#9146FF", "Instagram":"radial-gradient(circle at 30% 107%,#FDF497 0%,#FDF497 5%,#FD5949 45%,#D6249F 60%,#285AEB 90%)", "X":"#000000", "Discord":"#5865F2", "Roblox":"#000000"}
 watch_tiles = "\n".join([
-  tile("YouTube", f'{YT["handle"]} · builds and game updates · since {YT["since"]}', YT_SVG,
-       f'<span><b id="yt-subs">{n(YT["subs"])}</b>subscribers</span><span><b id="yt-videos">{n(YT["videos"])}</b>videos</span><span><b id="yt-views">{n(YT["views"])}</b>views</span>', YT["url"]),
+  tile("YouTube", f'{YT["handle"]} · gaming · since {YT["since"]}', YT_SVG,
+       f'<span><b id="yt-subs">{n(YT["subs"])}</b>subscribers</span><span><b id="yt-videos">{n(YT["videos"])}</b>videos</span><span><b id="yt-views">{n(YT["views"])}</b>views</span>', YT["url"], brand=BRAND["YouTube"]),
   tile("SRoolsKing 2.0", f'{YT2["handle"]} · {YT2["role"]}', YT_SVG,
-       f'<span><b id="yt2-subs">{n(YT2["subs"])}</b>subscribers</span><span id="yt2-videos-wrap" hidden><b id="yt2-videos">0</b>videos</span><span id="yt2-views-wrap" hidden><b id="yt2-views">0</b>views</span>', YT2["url"]),
+       f'<span><b id="yt2-subs">{n(YT2["subs"])}</b>subscribers</span><span id="yt2-videos-wrap" hidden><b id="yt2-videos">0</b>videos</span><span id="yt2-views-wrap" hidden><b id="yt2-views">0</b>views</span>', YT2["url"], brand=BRAND["YouTube"]),
   tile("FTB", f'{FTB["handle"]} · {FTB["role"]}', YT_SVG,
-       f'<span><b id="ftb-subs">{n(FTB["subs"])}</b>subscribers</span><span><b id="ftb-videos">{n(FTB["videos"])}</b>videos</span><span id="ftb-views-wrap" hidden><b id="ftb-views">0</b>views</span>', FTB["url"]),
-  tile("Twitch", f'{TW["handle"]} · live builds', TW_SVG,
-       f'<span><b id="tw-followers">{n(TW["followers"])}</b>followers</span><span id="tw-uptime" hidden></span>', TW["url"], badge='<span class="liv" id="tw-live">LIVE</span>', go="Follow"),
+       f'<span><b id="ftb-subs">{n(FTB["subs"])}</b>subscribers</span><span><b id="ftb-videos">{n(FTB["videos"])}</b>videos</span><span id="ftb-views-wrap" hidden><b id="ftb-views">0</b>views</span>', FTB["url"], brand=BRAND["YouTube"]),
+  tile("Twitch", f'{TW["handle"]} · live gaming', TW_SVG,
+       f'<span><b id="tw-followers">{n(TW["followers"])}</b>followers</span><span id="tw-uptime" hidden></span>', TW["url"], badge='<span class="liv" id="tw-live">LIVE</span>', go="Follow", brand=BRAND["Twitch"]),
 ])
 SOCIALS = [
   ("Instagram", "@sroolsking_", "https://www.instagram.com/sroolsking_", "Follow"),
@@ -441,7 +452,7 @@ SOCIALS = [
   ("Discord", "discord.gg/WewVqAu", DISCORD, "Join"),
   ("Roblox", "@SRoolsKing", "https://www.roblox.com/users/1074781327/profile", "Add me"),
 ]
-follow_tiles = "\n".join(tile(a, b, ICONS[a], "", u, go=g) for a, b, u, g in SOCIALS)
+follow_tiles = "\n".join(tile(a, b, ICONS[a], "", u, go=g, brand=BRAND[a]) for a, b, u, g in SOCIALS)
 
 roblox_cta = f'''
     <div class="btns center">
@@ -452,22 +463,34 @@ roblox_cta = f'''
 HOME_BODY = f'''<div id="srk">
 {topbar()}
 
-{nav([("Watch","#watch"),("Follow","#follow"),("Roblox","roblox.html"),("Contact","#contact")], YT["url"], f"{yt_icon} Subscribe")}
+{nav([("Videos","#latest"),("Channels","#watch"),("Roblox","roblox.html"),("Contact","#contact")], YT["url"], f"{yt_icon} Subscribe")}
 
-{hero("Creator &amp; game builder · Since 2020", 'I build video games.<br><span class="gold">Watch it happen.</span>', home_para, home_btns, home_trust)}
+{hero("Creator &amp; game builder · Since 2020", 'I build video games.<br><span class="gold">Watch me play.</span>', home_para, home_btns, home_trust)}
 
-  <section class="band light" id="watch"><div class="container">
+  <section class="band light" id="latest"><div class="container">
+    <div class="head">
+      <span class="eyebrow">Latest</span>
+      <h2>Two newest videos</h2>
+      <p>Straight from the main channel. This updates on its own when a new one drops.</p>
+    </div>
+    <div class="vids">
+      <div><div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list={YT["uploads"]}&amp;index=0&amp;rel=0" title="Newest video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><span class="vid-tag">Newest</span></div>
+      <div><div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list={YT["uploads"]}&amp;index=1&amp;rel=0" title="Second newest video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><span class="vid-tag">Before that</span></div>
+    </div>
+  </div></section>
+
+  <section class="band white" id="watch"><div class="container">
     <div class="head">
       <span class="eyebrow">Watch</span>
       <h2>Three channels and a stream</h2>
-      <p>Builds on the main channel, reactions on 2.0, FTB for the group, Twitch for live. Counts update live.</p>
+      <p>Gaming on the main channel, reactions on 2.0, FTB for the group, Twitch for live. Counts update live.</p>
     </div>
     <div class="tiles two">
 {watch_tiles}
     </div>
   </div></section>
 
-  <section class="band white" id="follow"><div class="container">
+  <section class="band light" id="follow"><div class="container">
     <div class="head">
       <span class="eyebrow">Follow</span>
       <h2>Everywhere else</h2>
@@ -541,8 +564,38 @@ JS = r"""
   var fmt = function(x){ return Number(x).toLocaleString("en-US"); };
   var get = function(u, asText){ return fetch(u).then(function(r){ return r.ok ? (asText ? r.text() : r.json()) : null; }).catch(function(){ return null; }); };
   function q(sel){ return root.querySelector(sel); }
-  function set(sel, v){ var el = q(sel); if (el && v != null) el.textContent = fmt(v); }
   function show(sel){ var el = q(sel); if (el) el.hidden = false; }
+
+  /* Count-up: every number starts at 0 and races to its exact value the first time it scrolls into view; live values re-count from wherever the number is. */
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var ease = function(t){ return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); };
+  function countTo(el, target, dur){
+    target = Math.round(Number(target)); if (isNaN(target)) return;
+    if (el._raf) cancelAnimationFrame(el._raf);
+    var from = parseInt((el.textContent || "0").replace(/[^\d]/g, ""), 10) || 0;
+    if (reduce || from === target){ el.textContent = fmt(target); return; }
+    var t0 = performance.now();
+    (function step(now){
+      var k = Math.min(1, (now - t0) / dur);
+      el.textContent = fmt(Math.round(from + (target - from) * ease(k)));
+      el._raf = k < 1 ? requestAnimationFrame(step) : null;
+    })(t0);
+  }
+  function setEl(el, v){ if (!el || v == null) return; v = Math.round(Number(v)); if (isNaN(v)) return; el.dataset.target = v; if (el._shown) countTo(el, v, 900); }
+  function set(sel, v){ setEl(q(sel), v); }
+  var nums = Array.prototype.slice.call(root.querySelectorAll(".stat b, .nums b, .stats-l b, .split b, #h-visits, #h-visits2"));
+  nums.forEach(function(el){
+    var v = parseInt((el.textContent || "").replace(/[^\d]/g, ""), 10); if (isNaN(v)){ el._shown = true; return; }
+    el.dataset.target = v;
+    var w = el.getBoundingClientRect().width; if (w){ el.style.minWidth = w + "px"; el.style.display = "inline-block"; }
+    if (el.id === "h-visits" || el.id === "h-visits2") el.style.textAlign = "right";
+    if (!reduce) el.textContent = "0";
+  });
+  function reveal(el){ if (el._shown) return; el._shown = true; countTo(el, el.dataset.target, 1500); }
+  if ("IntersectionObserver" in window && !reduce){
+    var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if (e.isIntersecting){ reveal(e.target); io.unobserve(e.target); } }); }, { threshold: 0.3 });
+    nums.forEach(function(el){ if (!el._shown) io.observe(el); });
+  } else nums.forEach(function(el){ el._shown = true; el.textContent = fmt(el.dataset.target); });
 
   /* Roblox: live visits, favorites, playing-now and fresh thumbnails through the public RoProxy mirror. */
   var ids = OWN.concat(WORKED).join(",");
@@ -564,7 +617,7 @@ JS = r"""
     if (gr.data.length === OWN.length + WORKED.length){
       own += UNLISTED_VISITS; favs += UNLISTED_FAVS;
       set("#t-visits", own + worked); set("#t-favs", favs); set("#t-own", own); set("#t-worked", worked);
-      root.querySelectorAll("#h-visits, #h-visits2").forEach(function(h){ h.textContent = Math.floor((own + worked) / 1e6); });
+      root.querySelectorAll("#h-visits, #h-visits2").forEach(function(h){ setEl(h, Math.floor((own + worked) / 1e6)); });
     }
     if (th && th.data) th.data.forEach(function(t){
       var u = t.thumbnails && t.thumbnails[0] && t.thumbnails[0].imageUrl;
@@ -615,7 +668,7 @@ def head(title, desc, path):
             f'<meta property="og:title" content="{esc(title)}">\n<meta property="og:description" content="{esc(desc)}">\n<meta property="og:type" content="website">\n'
             f'<meta property="og:url" content="https://sroolsking.com/{path}">\n<meta property="og:image" content="{HERO_BG}">\n<link rel="canonical" href="https://sroolsking.com/{path}">\n'
             f'{FONTS}\n<style>{CSS}</style>')
-HOME_HEAD = head("SRoolsKing", f"SRoolsKing on YouTube, Twitch, Instagram and X. Founder of Golden Eagle Studios, Peregrine Falcon Studios, FTB and Honneur, with {compact(all_visits)} Roblox visits behind the content.", "")
+HOME_HEAD = head("SRoolsKing", f"SRoolsKing on YouTube, Twitch, Instagram and X. Founder of Golden Eagle Studios, Peregrine Falcon Studios, the FTB channel and the Honneur clothing brand, with {compact(all_visits)} Roblox visits behind the content.", "")
 ROBLOX_HEAD = head("Roblox games · SRoolsKing", f"Every Roblox game SRoolsKing has built, with live visit counts. {compact(all_visits)} visits across tycoons like Ultimate Mansion Tycoon and Billionaire House Tycoon.", "roblox.html")
 
 def page(head_html, body):
