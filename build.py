@@ -113,7 +113,7 @@ def row(g):
 SHOWN = [g for g in GAMES if g["status"] != "retired"]          # retired/private games count in the totals but are not displayed
 new_games = [g for g in SHOWN if g["year"] == "2026" and g["visits"] < 100000]
 big = sorted([g for g in SHOWN if g not in new_games and g["visits"] >= 1000000], key=lambda g: -g["visits"])
-rest = sorted([g for g in SHOWN if g not in new_games and g not in big], key=lambda g: -g["visits"])
+rest = []   # smaller builds/hangouts: counted in the totals, not displayed
 w = WORKED_ON[0]
 
 CSS = r"""
@@ -327,12 +327,6 @@ BODY = f'''<div id="srk">
     </div>
   </section>
 
-  <section>
-    {sec("More", "Smaller builds and hangouts")}
-    <div class="rows">
-{chr(10).join(row(g) for g in rest)}
-    </div>
-  </section>
 
   <section id="watch">
     {sec("Watch", "Dev logs, builds, live sessions and FTB")}
