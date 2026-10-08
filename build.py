@@ -465,7 +465,7 @@ HOME_BODY = f'''<div id="srk">
 
 {nav([("Videos","#latest"),("Channels","#watch"),("Roblox","roblox.html"),("Contact","#contact")], YT["url"], f"{yt_icon} Subscribe")}
 
-{hero("Creator &amp; game builder · Since 2020", 'I build video games.<br><span class="gold">Watch me play.</span>', home_para, home_btns, home_trust)}
+{hero("Creator &amp; game developer · Since 2020", 'I build video games.<br><span class="gold">I make content too.</span>', home_para, home_btns, home_trust)}
 
   <section class="band light" id="latest"><div class="container">
     <div class="head">
