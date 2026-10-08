@@ -461,7 +461,6 @@ roblox_cta = f'''
     </div>'''
 
 HOME_BODY = f'''<div id="srk">
-{topbar()}
 
 {nav([("Videos","#latest"),("Channels","#watch"),("Roblox","roblox.html"),("Contact","#contact")], YT["url"], f"{yt_icon} Subscribe")}
 
@@ -521,7 +520,6 @@ rbx_trust = f'''        <li>{CHECK}Founder of four studios and brands</li>
 rbx_para = 'Roblox tycoons from <b>Ultimate Modern House Tycoon</b> to <b>Ultimate Mansion Tycoon</b> and <b>Billionaire House Tycoon</b>, plus builds for other studios. Every number on this page is live from Roblox.'
 
 ROBLOX_BODY = f'''<div id="srk">
-{topbar()}
 
 {nav([("Games","#games"),("Numbers","#numbers"),("Contact","#contact"),("Home","index.html")], LATEST_URL, "Play the latest", home="index.html")}
 
