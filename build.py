@@ -407,7 +407,7 @@ def footer():
       <div class="foot">
         <div class="foot-brand">
           <a class="brand" href="index.html">{HAT}<span><b>SROOLSKING</b><small>MEDIA · GAMES</small></span></a>
-          <p>Founder of Golden Eagle Studios, Peregrine Falcon Studios, the FTB channel and the Honneur clothing brand. Video games played {compact(all_visits)} times.</p>
+          <p>Founder of Golden Eagle Studios, Peregrine Falcon Studios, Simple Games for Simple People, the FTB channel and the Honneur clothing brand. Video games played {compact(all_visits)} times.</p>
           <div class="socials">
             <a href="{YT["url"]}"{EXT} aria-label="YouTube"><svg viewBox="0 0 24 24" style="fill:#FF0000">{YT_SVG}</svg></a>
             <a href="{TW["url"]}"{EXT} aria-label="Twitch"><svg viewBox="0 0 24 24" style="fill:#9146FF">{TW_SVG}</svg></a>
@@ -418,7 +418,7 @@ def footer():
         </div>
         <div><h4>Watch</h4><ul><li><a href="{YT["url"]}"{EXT}>YouTube</a></li><li><a href="{YT2["url"]}"{EXT}>SRoolsKing 2.0</a></li><li><a href="{FTB["url"]}"{EXT}>FTB</a></li><li><a href="{TW["url"]}"{EXT}>Twitch</a></li></ul></div>
         <div><h4>Games</h4><ul><li><a href="roblox.html">All my Roblox games</a></li>{games_links}</ul></div>
-        <div><h4>Studios &amp; brands</h4><ul><li><a href="https://www.roblox.com/groups/11451117/Golden-Eagle-Studios"{EXT}>Golden Eagle Studios</a></li><li><a href="https://www.roblox.com/groups/33416908/Peregrine-Falcon-Studios"{EXT}>Peregrine Falcon Studios</a></li><li><a href="https://shophonneur.com/"{EXT}>Honneur · clothing brand</a></li></ul></div>
+        <div><h4>Studios &amp; brands</h4><ul><li><a href="https://www.roblox.com/groups/11451117/Golden-Eagle-Studios"{EXT}>Golden Eagle Studios</a></li><li><a href="https://www.roblox.com/groups/33416908/Peregrine-Falcon-Studios"{EXT}>Peregrine Falcon Studios</a></li><li><a href="https://www.roblox.com/communities/1029795470/simple-games-for-simple-people"{EXT}>Simple Games for Simple People</a></li><li><a href="https://shophonneur.com/"{EXT}>Honneur · clothing brand</a></li></ul></div>
       </div>
       <div class="foot-bottom"><span>© 2026 SRoolsKing. All rights reserved.</span><span>sroolsking.com</span></div>
     </div>
@@ -431,7 +431,7 @@ home_btns = f'''        <a class="pill" href="{YT["url"]}"{EXT}>{yt_icon} Subscr
 home_trust = f'''        <li>{CHECK}More than three YouTube channels</li>
         <li>{CHECK}Streams on Twitch</li>
         <li>{CHECK}<span><span id="h-visits2">{all_visits // 1000000}</span>M+ Roblox visits</span></li>
-        <li>{CHECK}Founder of four studios and brands</li>'''
+        <li>{CHECK}Founder of five studios and brands</li>'''
 home_para = (f'Gaming on <b>YouTube</b>, reactions on <b>SRoolsKing 2.0</b>, entertainment with friends on <b>FTB</b>, and <b>Twitch</b> when I\'m live. '
              f'<b><span id="h-visits">{all_visits // 1000000}</span> million</b> Roblox visits behind it all.')
 
@@ -513,7 +513,7 @@ HOME_BODY = f'''<div id="srk">
 rbx_btns = f'''        <a class="pill" href="{LATEST_URL}"{EXT}>Play the latest {ARROW_SVG}</a>
         <a class="pill line" href="{YT["url"]}"{EXT}>{yt_icon} Watch on YouTube</a>
         <a class="pill line" href="{DISCORD}"{EXT}>{dc_icon} Join the Discord</a>'''
-rbx_trust = f'''        <li>{CHECK}Founder of four studios and brands</li>
+rbx_trust = f'''        <li>{CHECK}Founder of five studios and brands</li>
         <li>{CHECK}{len(GAMES) + len(WORKED_ON)} games shipped</li>
         <li>{CHECK}Xbox, mobile and PC</li>
         <li>{CHECK}Stats live from Roblox</li>'''
@@ -666,7 +666,7 @@ def head(title, desc, path):
             f'<meta property="og:title" content="{esc(title)}">\n<meta property="og:description" content="{esc(desc)}">\n<meta property="og:type" content="website">\n'
             f'<meta property="og:url" content="https://sroolsking.com/{path}">\n<meta property="og:image" content="{HERO_BG}">\n<link rel="canonical" href="https://sroolsking.com/{path}">\n'
             f'{FONTS}\n<style>{CSS}</style>')
-HOME_HEAD = head("SRoolsKing", f"SRoolsKing on YouTube, Twitch, Instagram and X. Founder of Golden Eagle Studios, Peregrine Falcon Studios, the FTB channel and the Honneur clothing brand, with {compact(all_visits)} Roblox visits behind the content.", "")
+HOME_HEAD = head("SRoolsKing", f"SRoolsKing on YouTube, Twitch, Instagram and X. Founder of Golden Eagle Studios, Peregrine Falcon Studios, Simple Games for Simple People, the FTB channel and the Honneur clothing brand, with {compact(all_visits)} Roblox visits behind the content.", "")
 ROBLOX_HEAD = head("Roblox games · SRoolsKing", f"Every Roblox game SRoolsKing has built, with live visit counts. {compact(all_visits)} visits across tycoons like Ultimate Mansion Tycoon and Billionaire House Tycoon.", "roblox.html")
 
 def page(head_html, body):
