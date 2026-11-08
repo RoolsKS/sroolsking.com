@@ -171,6 +171,9 @@ body{background:var(--light);color:var(--ink)}
 #srk .nav ul a:hover{color:var(--sky)}
 #srk .nav .pill{margin-left:-14px}
 #srk .nav .pill.tip{margin-left:0}
+#srk .opt{position:relative}
+#srk .opt::after{content:attr(data-opt);position:absolute;left:50%;top:calc(100% + 8px);transform:translate(-50%,-4px);background:#fff;color:#0D1538;font:600 12px var(--body);letter-spacing:.3px;padding:5px 10px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.25);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;z-index:5}
+#srk .opt:hover::after,#srk .opt:focus-visible::after,#srk .opt:active::after,#srk .opt.show-opt::after{opacity:1;transform:translate(-50%,0)}
 
 /* Hero */
 #srk .hero{position:relative;background:var(--navy2);color:#fff;overflow:hidden;isolation:isolate}
@@ -331,7 +334,8 @@ def tile(name, sub, icon, stats, href, badge="", go="Subscribe", brand=""):
 LINK_COLORS = {"Tip":"#31C3A2", "Discord":"#5865F2", "Instagram":"#E1306C", "X":"#000000", "Roblox":"#000000"}
 def link(label, sub, url):
     st = f' style="fill:{LINK_COLORS[label]}"' if label in LINK_COLORS else ""
-    return f'<a class="link" href="{url}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"{st}>{ICONS[label]}</svg>{esc(label)}<small>{esc(sub)}</small></a>'
+    opt = ' opt" data-opt="Optional" title="Optional' if label == "Tip" else ""
+    return f'<a class="link{opt}" href="{url}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"{st}>{ICONS[label]}</svg>{esc(label)}<small>{esc(sub)}</small></a>'
 
 LATEST = next(g for g in GAMES if g["u"] == 10767645246)
 LATEST_URL = f'https://www.roblox.com/games/{LATEST["p"]}'
@@ -353,7 +357,7 @@ def nav(links, cta_href, cta_html, home="#top"):
     return f'''  <nav class="nav" aria-label="Main"><div class="container">
     <a class="brand" href="{home}">{HAT}<span><b>SROOLSKING</b><small>MEDIA · GAMES</small></span></a>
     <ul>{lis}</ul>
-    <a class="pill line tip" href="https://streamlabs.com/sroolsking/tip"{EXT}><svg viewBox="0 0 24 24" aria-hidden="true">{ICONS["Tip"]}</svg> Tip me</a>
+    <a class="pill line tip opt" data-opt="Optional" title="Optional" href="https://streamlabs.com/sroolsking/tip"{EXT}><svg viewBox="0 0 24 24" aria-hidden="true">{ICONS["Tip"]}</svg> Tip me</a>
     <a class="pill" href="{cta_href}"{EXT}>{cta_html}</a>
   </div></nav>'''
 
@@ -561,6 +565,7 @@ JS = r"""
 <script>
 (function(){
   var root = document.getElementById("srk");
+  root.querySelectorAll(".opt").forEach(function(el){ el.addEventListener("touchstart", function(){ el.classList.add("show-opt"); setTimeout(function(){ el.classList.remove("show-opt"); }, 1500); }, {passive:true}); });
   var OWN = %s, WORKED = %s;
   var YT_ID = %s, YT2_ID = %s, FTB_ID = %s, YT_API_KEY = "";   /* optional: a YouTube Data API key makes the YouTube numbers official */
   var TW_LOGIN = %s;
