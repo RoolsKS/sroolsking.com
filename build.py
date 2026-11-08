@@ -46,6 +46,7 @@ TW = dict(url="https://www.twitch.tv/sroolsking", handle="twitch.tv/sroolsking",
 YT2 = dict(url="https://www.youtube.com/@sroolsking2.0", handle="@SRoolsKing2.0", channel_id="UCqcC3xK1ZJtHaY0Vwz7sTZg", subs=53, role="Reaction channel")
 FTB = dict(url="https://www.youtube.com/@FTBVision", handle="@FTBVision", channel_id="UC8OVbnfqSap98PcS69iWfgg", subs=125, videos=34, role="Entertainment with friends · founder, director, manager")
 CONTACT = [
+  ("Tip", "Support me on Streamlabs", "https://streamlabs.com/sroolsking/tip"),
   ("Discord", "discord.gg/WewVqAu", "https://discord.gg/WewVqAu"),
   ("Instagram", "@sroolsking_", "https://www.instagram.com/sroolsking_"),
   ("X", "@sroolsking", "https://twitter.com/sroolsking"),
@@ -86,6 +87,7 @@ PLAY_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/
 ARROW_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5l7 7-7 7-1.4-1.4 4.6-4.6H4v-2h12.2l-4.6-4.6z"/></svg>'
 CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19.2 20 8.2l-1.5-1.5z"/></svg>'
 ICONS = {
+  "Tip":'<path d="M12 21.4l-1.5-1.3C5.4 15.4 2 12.3 2 8.5 2 5.4 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.1C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.4 22 8.5c0 3.8-3.4 6.9-8.5 11.6z"/>',
   "Discord":'<path d="M20.3 4.4A19.8 19.8 0 0015.4 3l-.6 1.3a18 18 0 00-5.6 0L8.6 3a19.7 19.7 0 00-4.9 1.4C.6 9 0 13.6.3 18.1a19.9 19.9 0 006 3l1.3-2a13 13 0 01-2-1l.5-.4a14.2 14.2 0 0012 0l.5.4a13 13 0 01-2 1l1.3 2a19.9 19.9 0 006-3c.4-5.2-.8-9.7-3.6-13.7zM8.5 15.4c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4zm7 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4z"/>',
   "Instagram":'<path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 3.9 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zm0 4.7a5.1 5.1 0 100 10.2 5.1 5.1 0 000-10.2zm0 8.4a3.3 3.3 0 110-6.6 3.3 3.3 0 010 6.6zm5.3-9.8a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4z"/>',
   "X":'<path d="M17.5 3h3l-6.8 7.8L21.7 21h-6.2l-4.9-6.4L5 21H2l7.3-8.3L1.7 3h6.4l4.4 5.8zm-1 16.2h1.7L6.9 4.7H5.1z"/>',
@@ -323,7 +325,7 @@ def tile(name, sub, icon, stats, href, badge="", go="Subscribe", brand=""):
         <span class="go">{go} {ARROW_SVG}</span>
       </a>'''
 
-LINK_COLORS = {"Discord":"#5865F2", "Instagram":"#E1306C", "X":"#000000", "Roblox":"#000000"}
+LINK_COLORS = {"Tip":"#31C3A2", "Discord":"#5865F2", "Instagram":"#E1306C", "X":"#000000", "Roblox":"#000000"}
 def link(label, sub, url):
     st = f' style="fill:{LINK_COLORS[label]}"' if label in LINK_COLORS else ""
     return f'<a class="link" href="{url}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"{st}>{ICONS[label]}</svg>{esc(label)}<small>{esc(sub)}</small></a>'
@@ -416,7 +418,7 @@ def footer():
             <a href="{DISCORD}"{EXT} aria-label="Discord"><svg viewBox="0 0 24 24" style="fill:#5865F2">{ICONS["Discord"]}</svg></a>
           </div>
         </div>
-        <div><h4>Watch</h4><ul><li><a href="{YT["url"]}"{EXT}>YouTube</a></li><li><a href="{YT2["url"]}"{EXT}>SRoolsKing 2.0</a></li><li><a href="{FTB["url"]}"{EXT}>FTB</a></li><li><a href="{TW["url"]}"{EXT}>Twitch</a></li></ul></div>
+        <div><h4>Watch</h4><ul><li><a href="{YT["url"]}"{EXT}>YouTube</a></li><li><a href="{YT2["url"]}"{EXT}>SRoolsKing 2.0</a></li><li><a href="{FTB["url"]}"{EXT}>FTB</a></li><li><a href="{TW["url"]}"{EXT}>Twitch</a></li><li><a href="https://streamlabs.com/sroolsking/tip"{EXT}>Tip me</a></li></ul></div>
         <div><h4>Games</h4><ul><li><a href="roblox.html">All my Roblox games</a></li>{games_links}</ul></div>
         <div><h4>Studios &amp; brands</h4><ul><li><a href="https://www.roblox.com/groups/11451117/Golden-Eagle-Studios"{EXT}>Golden Eagle Studios</a></li><li><a href="https://www.roblox.com/groups/33416908/Peregrine-Falcon-Studios"{EXT}>Peregrine Falcon Studios</a></li><li><a href="https://www.roblox.com/communities/1029795470/simple-games-for-simple-people"{EXT}>Simple Games for Simple People</a></li><li><a href="https://shophonneur.com/"{EXT}>Honneur · clothing brand</a></li></ul></div>
       </div>
@@ -427,7 +429,8 @@ def footer():
 # ---------- home: socials first ----------
 home_btns = f'''        <a class="pill" href="{YT["url"]}"{EXT}>{yt_icon} Subscribe on YouTube</a>
         <a class="pill line" href="{TW["url"]}"{EXT}>{tw_icon} Follow on Twitch</a>
-        <a class="pill line" href="{DISCORD}"{EXT}>{dc_icon} Join the Discord</a>'''
+        <a class="pill line" href="{DISCORD}"{EXT}>{dc_icon} Join the Discord</a>
+        <a class="pill line" href="https://streamlabs.com/sroolsking/tip"{EXT}><svg viewBox="0 0 24 24" aria-hidden="true">{ICONS["Tip"]}</svg> Tip me</a>'''
 home_trust = f'''        <li>{CHECK}More than three YouTube channels</li>
         <li>{CHECK}Streams on Twitch</li>
         <li>{CHECK}<span><span id="h-visits2">{all_visits // 1000000}</span>M+ Roblox visits</span></li>
