@@ -169,7 +169,8 @@ body{background:var(--light);color:var(--ink)}
 #srk .brand small{display:block;font:600 9.5px/1 var(--body);letter-spacing:2.5px;color:var(--sky);margin-top:4px}
 #srk .nav ul{display:flex;gap:28px;list-style:none;margin:0 auto;padding:0;font:600 15px var(--body);color:#D5DEE8}
 #srk .nav ul a:hover{color:var(--sky)}
-#srk .nav .pill{margin-left:auto}
+#srk .nav .pill{margin-left:-14px}
+#srk .nav .pill.tip{margin-left:0}
 
 /* Hero */
 #srk .hero{position:relative;background:var(--navy2);color:#fff;overflow:hidden;isolation:isolate}
@@ -297,6 +298,8 @@ body{background:var(--light);color:var(--ink)}
   #srk .foot{grid-template-columns:1fr 1fr;gap:32px}
   #srk .foot-brand{grid-column:1/-1}
   #srk .nav ul{display:none}
+  #srk .nav .pill.tip{display:none}
+  #srk .nav .pill{margin-left:auto}
   #srk .topbar .tb-right{display:none}
   #srk .hero-in{padding-block:64px 44px}
   #srk .band{padding-block:64px}
@@ -350,6 +353,7 @@ def nav(links, cta_href, cta_html, home="#top"):
     return f'''  <nav class="nav" aria-label="Main"><div class="container">
     <a class="brand" href="{home}">{HAT}<span><b>SROOLSKING</b><small>MEDIA · GAMES</small></span></a>
     <ul>{lis}</ul>
+    <a class="pill line tip" href="https://streamlabs.com/sroolsking/tip"{EXT}><svg viewBox="0 0 24 24" aria-hidden="true">{ICONS["Tip"]}</svg> Tip me</a>
     <a class="pill" href="{cta_href}"{EXT}>{cta_html}</a>
   </div></nav>'''
 
@@ -429,8 +433,7 @@ def footer():
 # ---------- home: socials first ----------
 home_btns = f'''        <a class="pill" href="{YT["url"]}"{EXT}>{yt_icon} Subscribe on YouTube</a>
         <a class="pill line" href="{TW["url"]}"{EXT}>{tw_icon} Follow on Twitch</a>
-        <a class="pill line" href="{DISCORD}"{EXT}>{dc_icon} Join the Discord</a>
-        <a class="pill line" href="https://streamlabs.com/sroolsking/tip"{EXT}><svg viewBox="0 0 24 24" aria-hidden="true">{ICONS["Tip"]}</svg> Tip me</a>'''
+        <a class="pill line" href="{DISCORD}"{EXT}>{dc_icon} Join the Discord</a>'''
 home_trust = f'''        <li>{CHECK}More than three YouTube channels</li>
         <li>{CHECK}Streams on Twitch</li>
         <li>{CHECK}<span><span id="h-visits2">{all_visits // 1000000}</span>M+ Roblox visits</span></li>
