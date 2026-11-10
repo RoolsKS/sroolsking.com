@@ -476,7 +476,7 @@ def contact_section():
   </div></section>'''
 
 def footer():
-    games_links = "".join(f'<li><a href="https://www.roblox.com/games/{g["p"]}"{EXT}>{esc(g["name"])}</a></li>' for g in [FEATURED] + new_games + big)
+    games_links = "".join(f'<li><a href="https://www.roblox.com/games/{g["p"]}"{EXT}>{esc(g["name"])}</a></li>' for g in [FEATURED])
     return f'''  <footer>
     <div class="container">
       <div class="foot">
@@ -620,13 +620,13 @@ ROBLOX_BODY = f'''<div id="srk">
     <div class="grid">
 {card(FEATURED).replace('class="card"', 'class="card wide"', 1)}
     </div>
-    <div class="group">New in beta</div>
+    <div class="group" hidden>New in beta</div>
     <div class="grid">
-{chr(10).join(card(g) for g in new_games)}
+{chr(10).join(card(g).replace('<article class="card"', '<article class="card" hidden', 1) for g in new_games)}
     </div>
-    <div class="group">Most played</div>
+    <div class="group" hidden>Most played</div>
     <div class="grid">
-{chr(10).join(card(g) for g in big)}
+{chr(10).join(card(g).replace('<article class="card"', '<article class="card" hidden', 1) for g in big)}
     </div>
   </div></section>
 
@@ -671,6 +671,7 @@ JS = r"""
   var OWN = %s, WORKED = %s;
   var YT_ID = %s, YT2_ID = %s, FTB_ID = %s, YT_API_KEY = "";   /* optional: a YouTube Data API key makes the YouTube numbers official */
   var TW_LOGIN = %s;
+  var MIN_CCU = 25;
   var UNLISTED_VISITS = %s, UNLISTED_FAVS = %s;   /* private and test projects, counted but not listed */
   var fmt = function(x){ return Number(x).toLocaleString("en-US"); };
   var get = function(u, asText){ return fetch(u).then(function(r){ return r.ok ? (asText ? r.text() : r.json()) : null; }).catch(function(){ return null; }); };
@@ -732,10 +733,14 @@ JS = r"""
       if (WORKED.indexOf(d.id) >= 0) worked += d.visits; else own += d.visits;
       favs += d.favoritedCount;
       var box = q('[data-u="' + d.id + '"]'); if (!box) return;
+      if (box.classList.contains("card")) box.hidden = !(d.playing >= MIN_CCU);   /* only games with enough people playing right now are listed */
       set('[data-u="' + d.id + '"] [data-k="visits"]', d.visits);
       set('[data-u="' + d.id + '"] [data-k="favs"]', d.favoritedCount);
       var p = box.querySelector(".playing"); if (p){ p.hidden = !(d.playing >= 50); }   /* playing-now only once a game has 50+ in it */ set('[data-u="' + d.id + '"] [data-k="playing"]', d.playing);
     });
+    var cards = root.querySelectorAll(".card");
+    if (cards.length && !root.querySelector(".card:not([hidden])")){ var f = root.querySelector(".card.wide"); if (f) f.hidden = false; }   /* never leave the page with no game at all */
+    root.querySelectorAll(".grid").forEach(function(g){ var h = g.previousElementSibling; if (h && h.classList.contains("group")) h.hidden = !g.querySelector(".card:not([hidden])"); });
     if (gr.data.length === OWN.length + WORKED.length){
       own += UNLISTED_VISITS; favs += UNLISTED_FAVS;
       set("#t-visits", own + worked); set("#t-favs", favs); set("#t-own", own); set("#t-worked", worked);
