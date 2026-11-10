@@ -12,6 +12,8 @@
 <meta property="og:url" content="https://sroolsking.com/roblox.html">
 <meta property="og:image" content="https://tr.rbxcdn.com/180DAY-30f3e26e1ceeaf3ed893636b27b4b35a/768/432/Image/Png/noFilter">
 <link rel="canonical" href="https://sroolsking.com/roblox.html">
+<link rel="preconnect" href="https://games.roproxy.com" crossorigin>
+<link rel="preconnect" href="https://tr.rbxcdn.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap">
@@ -45,6 +47,20 @@ body{background:var(--light);color:var(--ink)}
 #srk .pill.line:hover{border-color:#fff;box-shadow:none;background:rgba(255,255,255,.06)}
 #srk .pill.sm{padding:11px 20px;font-size:14px}
 #srk .pill svg{width:16px;height:16px;fill:currentColor}
+
+/* Skeleton loading: shimmering placeholders shaped like the content until it arrives */
+@keyframes srk-sk{from{background-position:200% 0}to{background-position:-200% 0}}
+#srk .sk{color:transparent!important;border-radius:8px;background:linear-gradient(100deg,#E1E6F5 30%,#F3F5FD 50%,#E1E6F5 70%);background-size:200% 100%;animation:srk-sk 1.3s linear infinite;user-select:none}
+#srk .navy .sk,#srk .hero .sk{background-image:linear-gradient(100deg,rgba(255,255,255,.09) 30%,rgba(255,255,255,.2) 50%,rgba(255,255,255,.09) 70%)}
+#srk .thumb.loading::after,#srk .vid::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,#D9DFF2 30%,#EEF1FB 50%,#D9DFF2 70%);background-size:200% 100%;animation:srk-sk 1.3s linear infinite}
+#srk .thumb.loading img{opacity:0}
+#srk .thumb img{transition:opacity .3s}
+
+/* Accessibility + touch */
+#srk .skip{position:absolute;left:16px;top:-60px;z-index:50;background:#fff;color:var(--ink);font:700 14px var(--body);padding:12px 18px;border-radius:999px;transition:top .15s}
+#srk .skip:focus{top:12px}
+#srk a{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#srk section[id],#srk header[id]{scroll-margin-top:92px}
 
 /* Top bar + nav */
 #srk .topbar{background:var(--navy);color:var(--hero-muted);font-size:13px;border-bottom:1px solid var(--line-dark)}
@@ -174,13 +190,14 @@ body{background:var(--light);color:var(--ink)}
 #srk footer{background:var(--navy);color:var(--hero-muted);font-size:14px}
 #srk .foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;padding-block:64px 44px}
 #srk .foot h4{margin:0 0 14px;font:700 12.5px var(--body);letter-spacing:2.5px;text-transform:uppercase;color:#fff}
-#srk .foot ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+#srk .foot ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+#srk .foot ul a{display:inline-block;padding-block:5px}
 #srk .foot a:hover{color:var(--sky)}
 #srk .foot-brand{display:flex;flex-direction:column;gap:16px;align-items:flex-start;line-height:1.6}
 #srk .socials{display:flex;gap:10px}
-#srk .socials a{width:36px;height:36px;border-radius:50%;border:1px solid var(--line-dark);display:grid;place-items:center;color:#fff}
+#srk .socials a{width:44px;height:44px;border-radius:50%;border:1px solid var(--line-dark);display:grid;place-items:center;color:#fff}
 #srk .socials a:hover{border-color:var(--sky);color:var(--sky)}
-#srk .socials svg{width:16px;height:16px;fill:currentColor}
+#srk .socials svg{width:18px;height:18px;fill:currentColor}
 #srk .foot-bottom{border-top:1px solid var(--line-dark);padding-block:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:13px}
 #srk .fab{position:fixed;right:22px;bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:30;box-shadow:0 10px 30px rgba(0,0,0,.25)}
 
@@ -192,7 +209,11 @@ body{background:var(--light);color:var(--ink)}
   #srk .two{grid-template-columns:1fr;gap:32px}
   #srk .foot{grid-template-columns:1fr 1fr;gap:32px}
   #srk .foot-brand{grid-column:1/-1}
-  #srk .nav ul{display:none}
+  #srk .nav .container{flex-wrap:wrap;gap:0 16px}
+  #srk .nav ul{order:3;flex:0 0 100%;margin:0;gap:26px;overflow-x:auto;padding:2px 0 12px;font-size:14px;scrollbar-width:none;white-space:nowrap}
+  #srk .nav ul::-webkit-scrollbar{display:none}
+  #srk .nav ul a{display:inline-block;padding-block:8px}
+  #srk section[id],#srk header[id]{scroll-margin-top:128px}
   #srk .nav .pill.tip{display:none}
   #srk .nav .pill{margin-left:auto}
   #srk .topbar .tb-right{display:none}
@@ -208,13 +229,17 @@ body{background:var(--light);color:var(--ink)}
   #srk .foot{grid-template-columns:1fr}
   #srk .nav .container{min-height:66px}
   #srk .brand small{display:none}
-  #srk .nav .pill{padding:11px 18px;font-size:14px}
+  #srk .nav .pill{padding:9px 14px;font-size:13.5px;gap:7px}
+  #srk .brand b{font-size:19px}
+  #srk .brand svg{width:28px;height:28px}
+  #srk .brand{gap:8px}
 }
-@media (prefers-reduced-motion:reduce){#srk *{transition:none!important}}
+@media (prefers-reduced-motion:reduce){#srk *{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body style="margin:0">
 <div id="srk">
+  <a class="skip" href="#main">Skip to content</a>
 
   <nav class="nav" aria-label="Main"><div class="container">
     <a class="brand" href="index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 22.5 L4 10.5 L10.8 15.8 L16 7.5 L21.2 15.8 L28 10.5 L26 22.5 Z"/><path d="M6 22.5 H26"/><path d="M6.6 26.2 H25.4"/><circle cx="4" cy="9" r="1.6"/><circle cx="16" cy="5.9" r="1.6"/><circle cx="28" cy="9" r="1.6"/><circle cx="16" cy="19" r="1.4"/></svg><span><b>SROOLSKING</b><small>MEDIA · GAMES</small></span></a>
@@ -222,6 +247,8 @@ body{background:var(--light);color:var(--ink)}
     <a class="pill line tip opt" data-opt="Optional" title="Optional" href="https://streamlabs.com/sroolsking/tip" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.4l-1.5-1.3C5.4 15.4 2 12.3 2 8.5 2 5.4 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.1C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.4 22 8.5c0 3.8-3.4 6.9-8.5 11.6z"/></svg> Tip me</a>
     <a class="pill" href="https://www.roblox.com/games/127633247396147" target="_blank" rel="noopener">Play the latest</a>
   </div></nav>
+
+  <main id="main">
 
   <header class="hero" id="top">
     <img class="hero-bg" src="https://tr.rbxcdn.com/180DAY-30f3e26e1ceeaf3ed893636b27b4b35a/768/432/Image/Png/noFilter" alt="" data-thumb="9530317138" onerror="this.remove()">
@@ -252,7 +279,7 @@ body{background:var(--light);color:var(--ink)}
     <div class="group">New in beta</div>
     <div class="grid">
 <article class="card" data-u="10767645246">
-  <a class="thumb" href="https://www.roblox.com/games/127633247396147" target="_blank" rel="noopener" aria-label="Play Get Rich Building Stairs" style="background:linear-gradient(135deg,#1E6B43,#C99412)"><span class="fb">Get Rich Building Stairs</span><img src="https://tr.rbxcdn.com/180DAY-f32416710bb299697873431640a18a31/768/432/Image/Png/noFilter" alt="" data-thumb="10767645246" onerror="this.remove()" loading="lazy" decoding="async"></a>
+  <a class="thumb" href="https://www.roblox.com/games/127633247396147" target="_blank" rel="noopener" aria-label="Play Get Rich Building Stairs" style="background:linear-gradient(135deg,#1E6B43,#C99412)"><span class="fb">Get Rich Building Stairs</span><img src="https://tr.rbxcdn.com/180DAY-f32416710bb299697873431640a18a31/768/432/Image/Png/noFilter" alt="" data-thumb="10767645246" loading="lazy" decoding="async" width="768" height="432" onerror="this.remove()" loading="lazy" decoding="async"></a>
   <div class="card-b">
     <div class="card-t"><h3>Get Rich Building Stairs</h3><span class="chip beta">Beta</span></div>
     <p>Chop trees, mine rocks, and build a staircase that never ends. Pets gather for you, and it earns money offline.</p>
@@ -266,7 +293,7 @@ body{background:var(--light);color:var(--ink)}
   </div>
 </article>
 <article class="card" data-u="10345791932">
-  <a class="thumb" href="https://www.roblox.com/games/107417157677118" target="_blank" rel="noopener" aria-label="Play Build Your Soccer Empire" style="background:linear-gradient(135deg,#0F766E,#84CC16)"><span class="fb">Build Your Soccer Empire</span><img src="https://tr.rbxcdn.com/180DAY-e68203bfe14724788c30bd7074b59fe5/768/432/Image/Png/noFilter" alt="" data-thumb="10345791932" onerror="this.remove()" loading="lazy" decoding="async"></a>
+  <a class="thumb" href="https://www.roblox.com/games/107417157677118" target="_blank" rel="noopener" aria-label="Play Build Your Soccer Empire" style="background:linear-gradient(135deg,#0F766E,#84CC16)"><span class="fb">Build Your Soccer Empire</span><img src="https://tr.rbxcdn.com/180DAY-e68203bfe14724788c30bd7074b59fe5/768/432/Image/Png/noFilter" alt="" data-thumb="10345791932" loading="lazy" decoding="async" width="768" height="432" onerror="this.remove()" loading="lazy" decoding="async"></a>
   <div class="card-b">
     <div class="card-t"><h3>Build Your Soccer Empire</h3><span class="chip beta">Beta</span></div>
     <p>Draw a card against another player, then split it or steal it all. Boost your luck for Pros, World Class and GOATs, rebirth, fuse duplicates, get revenge.</p>
@@ -283,7 +310,7 @@ body{background:var(--light);color:var(--ink)}
     <div class="group">Most played</div>
     <div class="grid">
 <article class="card" data-u="4592957519">
-  <a class="thumb" href="https://www.roblox.com/games/13160412552" target="_blank" rel="noopener" aria-label="Play Ultimate Mansion Tycoon" style="background:linear-gradient(135deg,#6D28D9,#F472B6)"><span class="fb">Ultimate Mansion Tycoon</span><img src="https://tr.rbxcdn.com/180DAY-fe48b235000c5b4472f66fc670d1eaaa/768/432/Image/Png/noFilter" alt="" data-thumb="4592957519" onerror="this.remove()" loading="lazy" decoding="async"></a>
+  <a class="thumb" href="https://www.roblox.com/games/13160412552" target="_blank" rel="noopener" aria-label="Play Ultimate Mansion Tycoon" style="background:linear-gradient(135deg,#6D28D9,#F472B6)"><span class="fb">Ultimate Mansion Tycoon</span><img src="https://tr.rbxcdn.com/180DAY-fe48b235000c5b4472f66fc670d1eaaa/768/432/Image/Png/noFilter" alt="" data-thumb="4592957519" loading="lazy" decoding="async" width="768" height="432" onerror="this.remove()" loading="lazy" decoding="async"></a>
   <div class="card-b">
     <div class="card-t"><h3>Ultimate Mansion Tycoon</h3><span class="chip live">Live</span></div>
     <p>Claim a plot and build the best-looking mansion tycoon on Roblox. Unlock and drive cars, throw a house party, rebirth and do it bigger.</p>
@@ -297,7 +324,7 @@ body{background:var(--light);color:var(--ink)}
   </div>
 </article>
 <article class="card" data-u="3482493471">
-  <a class="thumb" href="https://www.roblox.com/games/9305786774" target="_blank" rel="noopener" aria-label="Play Ultimate Modern House Tycoon 2" style="background:linear-gradient(135deg,#0369A1,#38BDF8)"><span class="fb">Ultimate Modern House Tycoon 2</span><img src="https://tr.rbxcdn.com/180DAY-921903f01e18529a354933243a9cad7a/768/432/Image/Png/noFilter" alt="" data-thumb="3482493471" onerror="this.remove()" loading="lazy" decoding="async"></a>
+  <a class="thumb" href="https://www.roblox.com/games/9305786774" target="_blank" rel="noopener" aria-label="Play Ultimate Modern House Tycoon 2" style="background:linear-gradient(135deg,#0369A1,#38BDF8)"><span class="fb">Ultimate Modern House Tycoon 2</span><img src="https://tr.rbxcdn.com/180DAY-921903f01e18529a354933243a9cad7a/768/432/Image/Png/noFilter" alt="" data-thumb="3482493471" loading="lazy" decoding="async" width="768" height="432" onerror="this.remove()" loading="lazy" decoding="async"></a>
   <div class="card-b">
     <div class="card-t"><h3>Ultimate Modern House Tycoon 2</h3><span class="chip live">Live</span></div>
     <p>Rebirths, a revamped GUI, new gamepasses and a rebirth leaderboard. Claim a plot, build a modern house, drive cars.</p>
@@ -311,7 +338,7 @@ body{background:var(--light);color:var(--ink)}
   </div>
 </article>
 <article class="card" data-u="2533980161">
-  <a class="thumb" href="https://www.roblox.com/games/6709868855" target="_blank" rel="noopener" aria-label="Play Ultimate House Tycoon" style="background:linear-gradient(135deg,#B45309,#FBBF24)"><span class="fb">Ultimate House Tycoon</span><img src="https://tr.rbxcdn.com/180DAY-d9cc1e87629430c2babab3be50d016da/768/432/Image/Png/noFilter" alt="" data-thumb="2533980161" onerror="this.remove()" loading="lazy" decoding="async"></a>
+  <a class="thumb" href="https://www.roblox.com/games/6709868855" target="_blank" rel="noopener" aria-label="Play Ultimate House Tycoon" style="background:linear-gradient(135deg,#B45309,#FBBF24)"><span class="fb">Ultimate House Tycoon</span><img src="https://tr.rbxcdn.com/180DAY-d9cc1e87629430c2babab3be50d016da/768/432/Image/Png/noFilter" alt="" data-thumb="2533980161" loading="lazy" decoding="async" width="768" height="432" onerror="this.remove()" loading="lazy" decoding="async"></a>
   <div class="card-b">
     <div class="card-t"><h3>Ultimate House Tycoon</h3><span class="chip live">Live</span></div>
     <p>Claim a plot to build a house and roleplay with friends. Rebirth once you&#x27;ve bought every non-Robux button.</p>
@@ -325,7 +352,7 @@ body{background:var(--light);color:var(--ink)}
   </div>
 </article>
 <article class="card" data-u="9530317138">
-  <a class="thumb" href="https://www.roblox.com/games/119069636768315" target="_blank" rel="noopener" aria-label="Play Billionaire House Tycoon" style="background:linear-gradient(135deg,#1D4ED8,#22D3EE)"><span class="fb">Billionaire House Tycoon</span><img src="https://tr.rbxcdn.com/180DAY-30f3e26e1ceeaf3ed893636b27b4b35a/768/432/Image/Png/noFilter" alt="" data-thumb="9530317138" onerror="this.remove()" loading="lazy" decoding="async"></a>
+  <a class="thumb" href="https://www.roblox.com/games/119069636768315" target="_blank" rel="noopener" aria-label="Play Billionaire House Tycoon" style="background:linear-gradient(135deg,#1D4ED8,#22D3EE)"><span class="fb">Billionaire House Tycoon</span><img src="https://tr.rbxcdn.com/180DAY-30f3e26e1ceeaf3ed893636b27b4b35a/768/432/Image/Png/noFilter" alt="" data-thumb="9530317138" loading="lazy" decoding="async" width="768" height="432" onerror="this.remove()" loading="lazy" decoding="async"></a>
   <div class="card-b">
     <div class="card-t"><h3>Billionaire House Tycoon</h3><span class="chip beta">Beta</span></div>
     <p>Claim multiple plots and build a billionaire real estate portfolio. Start businesses, unlock cars. Yachts and mansions on the way.</p>
@@ -376,6 +403,8 @@ body{background:var(--light);color:var(--ink)}
       <a class="link" href="https://shophonneur.com/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3l5 3-2 4.5-2-.8V21H7V9.7l-2 .8L3 6l5-3a4 4 0 008 0z"/></svg>Honneur<small>Founder · clothing brand · shophonneur.com</small></a>
     </div>
   </div></section>
+
+  </main>
 
   <footer>
     <div class="container">
@@ -438,9 +467,19 @@ body{background:var(--light);color:var(--ink)}
     el.dataset.target = v;
     var w = el.getBoundingClientRect().width; if (w){ el.style.minWidth = w + "px"; el.style.display = "inline-block"; }
     if (el.id === "h-visits" || el.id === "h-visits2") el.style.textAlign = "right";
-    if (!reduce) el.textContent = "0";
+    if (!reduce){ el.textContent = "0"; el.classList.add("sk"); }
   });
-  function reveal(el){ if (el._shown) return; el._shown = true; countTo(el, el.dataset.target, 1500); }
+  /* Numbers stay as shimmering skeletons until live data lands (or 2s passes), then count up. */
+  var loaded = false;
+  function reveal(el){ if (el._shown) return; if (!loaded){ el._pending = true; return; } el._shown = true; countTo(el, el.dataset.target, 1500); }
+  function dataReady(){ if (loaded) return; loaded = true; nums.forEach(function(el){ el.classList.remove("sk"); if (el._pending) reveal(el); }); }
+  setTimeout(dataReady, 2000);
+  root.querySelectorAll(".thumb img").forEach(function(img){
+    if (img.complete && img.naturalWidth) return;
+    var t = img.parentNode; t.classList.add("loading");
+    var done = function(){ t.classList.remove("loading"); };
+    img.addEventListener("load", done); img.addEventListener("error", done); setTimeout(done, 6000);
+  });
   if ("IntersectionObserver" in window && !reduce){
     var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if (e.isIntersecting){ reveal(e.target); io.unobserve(e.target); } }); }, { threshold: 0.3 });
     nums.forEach(function(el){ if (!el._shown) io.observe(el); });
@@ -453,6 +492,7 @@ body{background:var(--light);color:var(--ink)}
     get("https://thumbnails.roproxy.com/v1/games/multiget/thumbnails?universeIds=" + ids + "&countPerUniverse=1&size=768x432&format=Png&isCircular=false")
   ]).then(function(res){
     var gr = res[0], th = res[1];
+    setTimeout(dataReady, 0);
     if (!gr || !gr.data) return;
     var own = 0, worked = 0, favs = 0;
     gr.data.forEach(function(d){

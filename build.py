@@ -76,7 +76,7 @@ STATUS = {"live":("Live","live"), "beta":("Beta","beta"), "retired":("Retired","
 def shot(g, cls="shot"):
     return (f'<span class="{cls}" style="background:linear-gradient(135deg,{g["grad"]})">'
             f'<span class="fb">{esc(g["name"])}</span>'
-            f'<img src="{CDN.format(g["thumb"])}" alt="" data-thumb="{g["u"]}" onerror="this.remove()" loading="lazy" decoding="async"></span>')
+            f'<img src="{CDN.format(g["thumb"])}" alt="" data-thumb="{g["u"]}" loading="lazy" decoding="async" width="768" height="432" onerror="this.remove()" loading="lazy" decoding="async"></span>')
 
 
 
@@ -102,7 +102,7 @@ def card(g):
     meta = f'<span>{esc(g["by"])}</span><span>{g["year"]}</span><span>{esc(g["plat"])}</span>'
     if g["code"]: meta += f'<span class="code">Code {esc(g["code"])}</span>'
     return f'''<article class="card" data-u="{g["u"]}">
-  <a class="thumb" href="{url}" target="_blank" rel="noopener" aria-label="Play {esc(g["name"])}" style="background:linear-gradient(135deg,{g["grad"]})"><span class="fb">{esc(g["name"])}</span><img src="{CDN.format(g["thumb"])}" alt="" data-thumb="{g["u"]}" onerror="this.remove()" loading="lazy" decoding="async"></a>
+  <a class="thumb" href="{url}" target="_blank" rel="noopener" aria-label="Play {esc(g["name"])}" style="background:linear-gradient(135deg,{g["grad"]})"><span class="fb">{esc(g["name"])}</span><img src="{CDN.format(g["thumb"])}" alt="" data-thumb="{g["u"]}" loading="lazy" decoding="async" width="768" height="432" onerror="this.remove()" loading="lazy" decoding="async"></a>
   <div class="card-b">
     <div class="card-t"><h3>{esc(g["name"])}</h3><span class="chip {cls}">{label}</span></div>
     <p>{esc(g["blurb"])}</p>
@@ -153,6 +153,20 @@ body{background:var(--light);color:var(--ink)}
 #srk .pill.line:hover{border-color:#fff;box-shadow:none;background:rgba(255,255,255,.06)}
 #srk .pill.sm{padding:11px 20px;font-size:14px}
 #srk .pill svg{width:16px;height:16px;fill:currentColor}
+
+/* Skeleton loading: shimmering placeholders shaped like the content until it arrives */
+@keyframes srk-sk{from{background-position:200% 0}to{background-position:-200% 0}}
+#srk .sk{color:transparent!important;border-radius:8px;background:linear-gradient(100deg,#E1E6F5 30%,#F3F5FD 50%,#E1E6F5 70%);background-size:200% 100%;animation:srk-sk 1.3s linear infinite;user-select:none}
+#srk .navy .sk,#srk .hero .sk{background-image:linear-gradient(100deg,rgba(255,255,255,.09) 30%,rgba(255,255,255,.2) 50%,rgba(255,255,255,.09) 70%)}
+#srk .thumb.loading::after,#srk .vid::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,#D9DFF2 30%,#EEF1FB 50%,#D9DFF2 70%);background-size:200% 100%;animation:srk-sk 1.3s linear infinite}
+#srk .thumb.loading img{opacity:0}
+#srk .thumb img{transition:opacity .3s}
+
+/* Accessibility + touch */
+#srk .skip{position:absolute;left:16px;top:-60px;z-index:50;background:#fff;color:var(--ink);font:700 14px var(--body);padding:12px 18px;border-radius:999px;transition:top .15s}
+#srk .skip:focus{top:12px}
+#srk a{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#srk section[id],#srk header[id]{scroll-margin-top:92px}
 
 /* Top bar + nav */
 #srk .topbar{background:var(--navy);color:var(--hero-muted);font-size:13px;border-bottom:1px solid var(--line-dark)}
@@ -282,13 +296,14 @@ body{background:var(--light);color:var(--ink)}
 #srk footer{background:var(--navy);color:var(--hero-muted);font-size:14px}
 #srk .foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;padding-block:64px 44px}
 #srk .foot h4{margin:0 0 14px;font:700 12.5px var(--body);letter-spacing:2.5px;text-transform:uppercase;color:#fff}
-#srk .foot ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+#srk .foot ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+#srk .foot ul a{display:inline-block;padding-block:5px}
 #srk .foot a:hover{color:var(--sky)}
 #srk .foot-brand{display:flex;flex-direction:column;gap:16px;align-items:flex-start;line-height:1.6}
 #srk .socials{display:flex;gap:10px}
-#srk .socials a{width:36px;height:36px;border-radius:50%;border:1px solid var(--line-dark);display:grid;place-items:center;color:#fff}
+#srk .socials a{width:44px;height:44px;border-radius:50%;border:1px solid var(--line-dark);display:grid;place-items:center;color:#fff}
 #srk .socials a:hover{border-color:var(--sky);color:var(--sky)}
-#srk .socials svg{width:16px;height:16px;fill:currentColor}
+#srk .socials svg{width:18px;height:18px;fill:currentColor}
 #srk .foot-bottom{border-top:1px solid var(--line-dark);padding-block:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:13px}
 #srk .fab{position:fixed;right:22px;bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:30;box-shadow:0 10px 30px rgba(0,0,0,.25)}
 
@@ -300,7 +315,11 @@ body{background:var(--light);color:var(--ink)}
   #srk .two{grid-template-columns:1fr;gap:32px}
   #srk .foot{grid-template-columns:1fr 1fr;gap:32px}
   #srk .foot-brand{grid-column:1/-1}
-  #srk .nav ul{display:none}
+  #srk .nav .container{flex-wrap:wrap;gap:0 16px}
+  #srk .nav ul{order:3;flex:0 0 100%;margin:0;gap:26px;overflow-x:auto;padding:2px 0 12px;font-size:14px;scrollbar-width:none;white-space:nowrap}
+  #srk .nav ul::-webkit-scrollbar{display:none}
+  #srk .nav ul a{display:inline-block;padding-block:8px}
+  #srk section[id],#srk header[id]{scroll-margin-top:128px}
   #srk .nav .pill.tip{display:none}
   #srk .nav .pill{margin-left:auto}
   #srk .topbar .tb-right{display:none}
@@ -316,9 +335,12 @@ body{background:var(--light);color:var(--ink)}
   #srk .foot{grid-template-columns:1fr}
   #srk .nav .container{min-height:66px}
   #srk .brand small{display:none}
-  #srk .nav .pill{padding:11px 18px;font-size:14px}
+  #srk .nav .pill{padding:9px 14px;font-size:13.5px;gap:7px}
+  #srk .brand b{font-size:19px}
+  #srk .brand svg{width:28px;height:28px}
+  #srk .brand{gap:8px}
 }
-@media (prefers-reduced-motion:reduce){#srk *{transition:none!important}}
+@media (prefers-reduced-motion:reduce){#srk *{transition:none!important;animation:none!important}}
 """
 
 def tile(name, sub, icon, stats, href, badge="", go="Subscribe", brand=""):
@@ -471,8 +493,11 @@ roblox_cta = f'''
     </div>'''
 
 HOME_BODY = f'''<div id="srk">
+  <a class="skip" href="#main">Skip to content</a>
 
 {nav([("Videos","#latest"),("Channels","#watch"),("Roblox","roblox.html"),("Contact","#contact")], YT["url"], f"{yt_icon} Subscribe")}
+
+  <main id="main">
 
 {hero("Creator &amp; game developer · Since 2020", 'I build video games.<br><span class="gold">I make contents too.</span>', home_para, home_btns, home_trust)}
 
@@ -514,6 +539,8 @@ HOME_BODY = f'''<div id="srk">
 
 {contact_section()}
 
+  </main>
+
 {footer()}
 
   <a class="pill fab" href="{YT["url"]}"{EXT}>{yt_icon} Subscribe</a>
@@ -530,8 +557,11 @@ rbx_trust = f'''        <li>{CHECK}Founder of five studios and brands</li>
 rbx_para = 'Roblox tycoons from <b>Ultimate Modern House Tycoon</b> to <b>Ultimate Mansion Tycoon</b> and <b>Billionaire House Tycoon</b>, plus builds for other studios. Every number on this page is live from Roblox.'
 
 ROBLOX_BODY = f'''<div id="srk">
+  <a class="skip" href="#main">Skip to content</a>
 
 {nav([("Games","#games"),("Numbers","#numbers"),("Contact","#contact"),("Home","index.html")], LATEST_URL, "Play the latest", home="index.html")}
+
+  <main id="main">
 
 {hero("Roblox · Building since 2020", f'I build video games.<br><span class="gold"><span id="h-visits">{all_visits // 1000000}</span> million visits and counting.</span>', rbx_para, rbx_btns, rbx_trust)}
 
@@ -554,6 +584,8 @@ ROBLOX_BODY = f'''<div id="srk">
 {stats_band("numbers", "By the numbers", "Across every game I've built")}
 
 {contact_section()}
+
+  </main>
 
 {footer()}
 
@@ -598,9 +630,19 @@ JS = r"""
     el.dataset.target = v;
     var w = el.getBoundingClientRect().width; if (w){ el.style.minWidth = w + "px"; el.style.display = "inline-block"; }
     if (el.id === "h-visits" || el.id === "h-visits2") el.style.textAlign = "right";
-    if (!reduce) el.textContent = "0";
+    if (!reduce){ el.textContent = "0"; el.classList.add("sk"); }
   });
-  function reveal(el){ if (el._shown) return; el._shown = true; countTo(el, el.dataset.target, 1500); }
+  /* Numbers stay as shimmering skeletons until live data lands (or 2s passes), then count up. */
+  var loaded = false;
+  function reveal(el){ if (el._shown) return; if (!loaded){ el._pending = true; return; } el._shown = true; countTo(el, el.dataset.target, 1500); }
+  function dataReady(){ if (loaded) return; loaded = true; nums.forEach(function(el){ el.classList.remove("sk"); if (el._pending) reveal(el); }); }
+  setTimeout(dataReady, 2000);
+  root.querySelectorAll(".thumb img").forEach(function(img){
+    if (img.complete && img.naturalWidth) return;
+    var t = img.parentNode; t.classList.add("loading");
+    var done = function(){ t.classList.remove("loading"); };
+    img.addEventListener("load", done); img.addEventListener("error", done); setTimeout(done, 6000);
+  });
   if ("IntersectionObserver" in window && !reduce){
     var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if (e.isIntersecting){ reveal(e.target); io.unobserve(e.target); } }); }, { threshold: 0.3 });
     nums.forEach(function(el){ if (!el._shown) io.observe(el); });
@@ -613,6 +655,7 @@ JS = r"""
     get("https://thumbnails.roproxy.com/v1/games/multiget/thumbnails?universeIds=" + ids + "&countPerUniverse=1&size=768x432&format=Png&isCircular=false")
   ]).then(function(res){
     var gr = res[0], th = res[1];
+    setTimeout(dataReady, 0);
     if (!gr || !gr.data) return;
     var own = 0, worked = 0, favs = 0;
     gr.data.forEach(function(d){
@@ -676,7 +719,7 @@ def head(title, desc, path):
     return (f'<title>{esc(title)}</title>\n<meta name="description" content="{esc(desc)}">\n'
             f'<meta property="og:title" content="{esc(title)}">\n<meta property="og:description" content="{esc(desc)}">\n<meta property="og:type" content="website">\n'
             f'<meta property="og:url" content="https://sroolsking.com/{path}">\n<meta property="og:image" content="{HERO_BG}">\n<link rel="canonical" href="https://sroolsking.com/{path}">\n'
-            f'{FONTS}\n<style>{CSS}</style>')
+            f'<link rel="preconnect" href="https://games.roproxy.com" crossorigin>\n<link rel="preconnect" href="https://tr.rbxcdn.com">\n{FONTS}\n<style>{CSS}</style>')
 HOME_HEAD = head("SRoolsKing", f"SRoolsKing on YouTube, Twitch, Instagram and X. Founder of Golden Eagle Studios, Peregrine Falcon Studios, Simple Games for Simple People, the FTB channel and the Honneur clothing brand, with {compact(all_visits)} Roblox visits behind the content.", "")
 ROBLOX_HEAD = head("Roblox games · SRoolsKing", f"Every Roblox game SRoolsKing has built, with live visit counts. {compact(all_visits)} visits across tycoons like Ultimate Mansion Tycoon and Billionaire House Tycoon.", "roblox.html")
 
