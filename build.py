@@ -119,6 +119,8 @@ def card(g):
 SHOWN = [g for g in GAMES if g["status"] != "retired"]          # retired/private games count in the totals but are not displayed
 new_games = [g for g in SHOWN if g["year"] == "2026" and g["visits"] < 100000]
 big = sorted([g for g in SHOWN if g not in new_games and g["visits"] >= 1000000], key=lambda g: -g["visits"])
+FEATURED = next(g for g in GAMES if g["u"] == 9530317138)
+big = [g for g in big if g is not FEATURED]
 rest = []   # smaller builds/hangouts: counted in the totals, not displayed
 w = WORKED_ON[0]
 HERO_BG = CDN.format(next(g for g in GAMES if g["u"] == 9530317138)["thumb"])
@@ -161,6 +163,38 @@ body{background:var(--light);color:var(--ink)}
 #srk .thumb.loading::after,#srk .vid::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,#D9DFF2 30%,#EEF1FB 50%,#D9DFF2 70%);background-size:200% 100%;animation:srk-sk 1.3s linear infinite}
 #srk .thumb.loading img{opacity:0}
 #srk .thumb img{transition:opacity .3s}
+
+/* Motion: scroll reveals, a scroll progress bar, and elements that react to the cursor or a tap */
+#srk .progress{position:fixed;left:0;top:0;height:3px;width:100%;z-index:40;background:linear-gradient(90deg,var(--sky),#7DD3FC);transform-origin:0 50%;transform:scaleX(0);pointer-events:none}
+#srk.js .rv{opacity:0;transform:translateY(30px)}
+#srk.js .rv.in{opacity:1;transform:none;transition:opacity .65s ease,transform .65s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0ms)}
+#srk .pill:active{transform:scale(.95)}
+#srk .link:active,#srk .socials a:active{transform:scale(.94)}
+#srk .thumb img{transition:opacity .3s,transform .5s cubic-bezier(.2,.7,.2,1)}
+#srk .card:hover .thumb img{transform:scale(1.06)}
+#srk .tile .ic{transition:transform .3s cubic-bezier(.3,1.6,.5,1)}
+#srk .tile:hover .ic{transform:scale(1.12) rotate(-6deg)}
+#srk .brand svg{transition:transform .4s cubic-bezier(.3,1.6,.5,1)}
+#srk .brand:hover svg{transform:translateY(-3px) rotate(-8deg)}
+#srk .socials a{transition:transform .2s,border-color .2s,color .2s}
+#srk .socials a:hover{transform:translateY(-3px)}
+#srk .tilt{transform-style:preserve-3d;will-change:transform}
+#srk .stat{position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
+#srk .stat::before{content:"";position:absolute;inset:0;background:radial-gradient(220px circle at var(--mx,50%) var(--my,50%),rgba(56,189,248,.22),transparent 70%);opacity:0;transition:opacity .25s;pointer-events:none}
+#srk .stat:hover{border-color:rgba(56,189,248,.5);transform:translateY(-3px)}
+#srk .stat:hover::before{opacity:1}
+#srk .stat>*{position:relative}
+#srk .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:srk-rip .55s ease-out forwards;pointer-events:none}
+@keyframes srk-rip{to{transform:scale(1);opacity:0}}
+#srk .pill{position:relative;overflow:hidden}
+#srk .pill.opt{overflow:visible}
+@keyframes srk-in{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+#srk.js .hero-in>*{animation:srk-in .7s cubic-bezier(.2,.7,.2,1) both}
+#srk.js .hero-in>*:nth-child(2){animation-delay:.08s}
+#srk.js .hero-in>*:nth-child(3){animation-delay:.16s}
+#srk.js .hero-in>*:nth-child(4){animation-delay:.24s}
+#srk.js .hero-in>*:nth-child(5){animation-delay:.32s}
+@media (prefers-reduced-motion:reduce){#srk.js .rv{opacity:1;transform:none}#srk .progress{display:none}}
 
 /* Accessibility + touch */
 #srk .skip{position:absolute;left:16px;top:-60px;z-index:50;background:#fff;color:var(--ink);font:700 14px var(--body);padding:12px 18px;border-radius:999px;transition:top .15s}
@@ -240,6 +274,11 @@ body{background:var(--light);color:var(--ink)}
 #srk .nums .playing b{color:var(--live)}
 #srk .card .pill{align-self:flex-start;margin-top:6px}
 
+#srk .card.wide{grid-column:1/-1;flex-direction:row}
+#srk .card.wide .thumb{flex:0 0 56%;aspect-ratio:auto;min-height:320px}
+#srk .card.wide .card-b{justify-content:center;padding:32px 36px}
+#srk .card.wide h3{font-size:38px}
+
 /* Stats band */
 #srk .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 #srk .stat{background:var(--navy2);border:1px solid var(--line-dark);border-radius:16px;padding:28px 24px;text-align:center;display:flex;flex-direction:column;gap:8px}
@@ -309,6 +348,10 @@ body{background:var(--light);color:var(--ink)}
 
 @media (max-width:900px){
   #srk .grid{grid-template-columns:1fr}
+  #srk .card.wide{flex-direction:column}
+  #srk .card.wide .thumb{flex:none;aspect-ratio:16/9;min-height:0}
+  #srk .card.wide .card-b{padding:22px 24px 26px}
+  #srk .card.wide h3{font-size:28px}
   #srk .stats{grid-template-columns:1fr 1fr}
   #srk .tiles,#srk .tiles.two,#srk .vids{grid-template-columns:1fr}
   #srk .tiles.four{grid-template-columns:1fr 1fr}
@@ -433,7 +476,7 @@ def contact_section():
   </div></section>'''
 
 def footer():
-    games_links = "".join(f'<li><a href="https://www.roblox.com/games/{g["p"]}"{EXT}>{esc(g["name"])}</a></li>' for g in new_games + big)
+    games_links = "".join(f'<li><a href="https://www.roblox.com/games/{g["p"]}"{EXT}>{esc(g["name"])}</a></li>' for g in [FEATURED] + new_games + big)
     return f'''  <footer>
     <div class="container">
       <div class="foot">
@@ -493,6 +536,7 @@ roblox_cta = f'''
     </div>'''
 
 HOME_BODY = f'''<div id="srk">
+  <div class="progress" aria-hidden="true"></div>
   <a class="skip" href="#main">Skip to content</a>
 
 {nav([("Videos","#latest"),("Channels","#watch"),("Roblox","roblox.html"),("Contact","#contact")], YT["url"], f"{yt_icon} Subscribe")}
@@ -557,6 +601,7 @@ rbx_trust = f'''        <li>{CHECK}Founder of five studios and brands</li>
 rbx_para = 'Roblox tycoons from <b>Ultimate Modern House Tycoon</b> to <b>Ultimate Mansion Tycoon</b> and <b>Billionaire House Tycoon</b>, plus builds for other studios. Every number on this page is live from Roblox.'
 
 ROBLOX_BODY = f'''<div id="srk">
+  <div class="progress" aria-hidden="true"></div>
   <a class="skip" href="#main">Skip to content</a>
 
 {nav([("Games","#games"),("Numbers","#numbers"),("Contact","#contact"),("Home","index.html")], LATEST_URL, "Play the latest", home="index.html")}
@@ -570,6 +615,10 @@ ROBLOX_BODY = f'''<div id="srk">
       <span class="eyebrow">Games</span>
       <h2>What I've built</h2>
       <p>Tycoons where you claim a plot, build it up and show it off. Free to play, with codes for in-game cash.</p>
+    </div>
+    <div class="group">Featured</div>
+    <div class="grid">
+{card(FEATURED).replace('class="card"', 'class="card wide"', 1)}
     </div>
     <div class="group">New in beta</div>
     <div class="grid">
@@ -597,6 +646,27 @@ JS = r"""
 <script>
 (function(){
   var root = document.getElementById("srk");
+  root.classList.add("js");
+  var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* Scroll: sections rise in as they enter view (staggered), a progress bar tracks the page, the hero image drifts. */
+  var rv = Array.prototype.slice.call(root.querySelectorAll(".head, .card, .tile, .stat, .vids>div, .split, .two .copy, .links, .group, .btns.center, .foot>div"));
+  if (!calm && "IntersectionObserver" in window){
+    rv.forEach(function(el){ el.classList.add("rv"); var sibs = Array.prototype.filter.call(el.parentNode.children, function(c){ return c.classList.contains("rv") || c === el; }); el.style.setProperty("--d", Math.min(sibs.indexOf(el), 5) * 80 + "ms"); });
+    var rio = new IntersectionObserver(function(es){ es.forEach(function(e){ if (!e.isIntersecting) return; var el = e.target; rio.unobserve(el); el.classList.add("in"); setTimeout(function(){ el.classList.remove("rv", "in"); el.style.removeProperty("--d"); }, 1300); }); }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+    rv.forEach(function(el){ rio.observe(el); });
+  }
+  var bar = root.querySelector(".progress"), hbg = root.querySelector(".hero-bg"), tick = false;
+  function onScroll(){ tick = false; var y = window.scrollY, max = document.documentElement.scrollHeight - window.innerHeight; if (bar) bar.style.transform = "scaleX(" + (max > 0 ? Math.min(1, y / max) : 0) + ")"; if (hbg && !calm && y < 900) hbg.style.transform = "translateY(" + y * 0.18 + "px) scale(1.04)"; }
+  window.addEventListener("scroll", function(){ if (!tick){ tick = true; requestAnimationFrame(onScroll); } }, { passive: true }); onScroll();
+  /* React: cards tilt toward the cursor, stat cards glow under it, buttons ripple where they are pressed. */
+  if (!calm && window.matchMedia("(hover: hover) and (pointer: fine)").matches){
+    root.querySelectorAll(".card, .tile").forEach(function(el){
+      el.addEventListener("pointermove", function(e){ if (el.classList.contains("rv")) return; var r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5, k = Math.min(1, 520 / r.width); x *= k; y *= k; el.classList.add("tilt"); el.style.transition = "transform .08s linear, box-shadow .2s"; el.style.transform = "perspective(900px) rotateX(" + (-y * 5).toFixed(2) + "deg) rotateY(" + (x * 6).toFixed(2) + "deg) translateY(-4px)"; });
+      el.addEventListener("pointerleave", function(){ el.style.transition = "transform .45s cubic-bezier(.2,.7,.2,1), box-shadow .2s"; el.style.transform = ""; });
+    });
+    root.querySelectorAll(".stat").forEach(function(el){ el.addEventListener("pointermove", function(e){ var r = el.getBoundingClientRect(); el.style.setProperty("--mx", (e.clientX - r.left) + "px"); el.style.setProperty("--my", (e.clientY - r.top) + "px"); }); });
+  }
+  if (!calm) root.querySelectorAll(".pill").forEach(function(el){ el.addEventListener("pointerdown", function(e){ var r = el.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2, s = document.createElement("span"); s.className = "ripple"; s.style.width = s.style.height = d + "px"; s.style.left = (e.clientX - r.left - d / 2) + "px"; s.style.top = (e.clientY - r.top - d / 2) + "px"; el.appendChild(s); setTimeout(function(){ s.remove(); }, 600); }); });
   root.querySelectorAll(".opt").forEach(function(el){ el.addEventListener("touchstart", function(){ el.classList.add("show-opt"); setTimeout(function(){ el.classList.remove("show-opt"); }, 1500); }, {passive:true}); });
   var OWN = %s, WORKED = %s;
   var YT_ID = %s, YT2_ID = %s, FTB_ID = %s, YT_API_KEY = "";   /* optional: a YouTube Data API key makes the YouTube numbers official */

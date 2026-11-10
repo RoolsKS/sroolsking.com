@@ -56,6 +56,38 @@ body{background:var(--light);color:var(--ink)}
 #srk .thumb.loading img{opacity:0}
 #srk .thumb img{transition:opacity .3s}
 
+/* Motion: scroll reveals, a scroll progress bar, and elements that react to the cursor or a tap */
+#srk .progress{position:fixed;left:0;top:0;height:3px;width:100%;z-index:40;background:linear-gradient(90deg,var(--sky),#7DD3FC);transform-origin:0 50%;transform:scaleX(0);pointer-events:none}
+#srk.js .rv{opacity:0;transform:translateY(30px)}
+#srk.js .rv.in{opacity:1;transform:none;transition:opacity .65s ease,transform .65s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0ms)}
+#srk .pill:active{transform:scale(.95)}
+#srk .link:active,#srk .socials a:active{transform:scale(.94)}
+#srk .thumb img{transition:opacity .3s,transform .5s cubic-bezier(.2,.7,.2,1)}
+#srk .card:hover .thumb img{transform:scale(1.06)}
+#srk .tile .ic{transition:transform .3s cubic-bezier(.3,1.6,.5,1)}
+#srk .tile:hover .ic{transform:scale(1.12) rotate(-6deg)}
+#srk .brand svg{transition:transform .4s cubic-bezier(.3,1.6,.5,1)}
+#srk .brand:hover svg{transform:translateY(-3px) rotate(-8deg)}
+#srk .socials a{transition:transform .2s,border-color .2s,color .2s}
+#srk .socials a:hover{transform:translateY(-3px)}
+#srk .tilt{transform-style:preserve-3d;will-change:transform}
+#srk .stat{position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
+#srk .stat::before{content:"";position:absolute;inset:0;background:radial-gradient(220px circle at var(--mx,50%) var(--my,50%),rgba(56,189,248,.22),transparent 70%);opacity:0;transition:opacity .25s;pointer-events:none}
+#srk .stat:hover{border-color:rgba(56,189,248,.5);transform:translateY(-3px)}
+#srk .stat:hover::before{opacity:1}
+#srk .stat>*{position:relative}
+#srk .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:srk-rip .55s ease-out forwards;pointer-events:none}
+@keyframes srk-rip{to{transform:scale(1);opacity:0}}
+#srk .pill{position:relative;overflow:hidden}
+#srk .pill.opt{overflow:visible}
+@keyframes srk-in{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+#srk.js .hero-in>*{animation:srk-in .7s cubic-bezier(.2,.7,.2,1) both}
+#srk.js .hero-in>*:nth-child(2){animation-delay:.08s}
+#srk.js .hero-in>*:nth-child(3){animation-delay:.16s}
+#srk.js .hero-in>*:nth-child(4){animation-delay:.24s}
+#srk.js .hero-in>*:nth-child(5){animation-delay:.32s}
+@media (prefers-reduced-motion:reduce){#srk.js .rv{opacity:1;transform:none}#srk .progress{display:none}}
+
 /* Accessibility + touch */
 #srk .skip{position:absolute;left:16px;top:-60px;z-index:50;background:#fff;color:var(--ink);font:700 14px var(--body);padding:12px 18px;border-radius:999px;transition:top .15s}
 #srk .skip:focus{top:12px}
@@ -134,6 +166,11 @@ body{background:var(--light);color:var(--ink)}
 #srk .nums .playing b{color:var(--live)}
 #srk .card .pill{align-self:flex-start;margin-top:6px}
 
+#srk .card.wide{grid-column:1/-1;flex-direction:row}
+#srk .card.wide .thumb{flex:0 0 56%;aspect-ratio:auto;min-height:320px}
+#srk .card.wide .card-b{justify-content:center;padding:32px 36px}
+#srk .card.wide h3{font-size:38px}
+
 /* Stats band */
 #srk .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 #srk .stat{background:var(--navy2);border:1px solid var(--line-dark);border-radius:16px;padding:28px 24px;text-align:center;display:flex;flex-direction:column;gap:8px}
@@ -203,6 +240,10 @@ body{background:var(--light);color:var(--ink)}
 
 @media (max-width:900px){
   #srk .grid{grid-template-columns:1fr}
+  #srk .card.wide{flex-direction:column}
+  #srk .card.wide .thumb{flex:none;aspect-ratio:16/9;min-height:0}
+  #srk .card.wide .card-b{padding:22px 24px 26px}
+  #srk .card.wide h3{font-size:28px}
   #srk .stats{grid-template-columns:1fr 1fr}
   #srk .tiles,#srk .tiles.two,#srk .vids{grid-template-columns:1fr}
   #srk .tiles.four{grid-template-columns:1fr 1fr}
@@ -239,6 +280,7 @@ body{background:var(--light);color:var(--ink)}
 </head>
 <body style="margin:0">
 <div id="srk">
+  <div class="progress" aria-hidden="true"></div>
   <a class="skip" href="#main">Skip to content</a>
 
   <nav class="nav" aria-label="Main"><div class="container">
@@ -412,7 +454,7 @@ body{background:var(--light);color:var(--ink)}
           </div>
         </div>
         <div><h4>Watch</h4><ul><li><a href="https://www.youtube.com/@sroolsking" target="_blank" rel="noopener">YouTube</a></li><li><a href="https://www.youtube.com/@sroolsking2.0" target="_blank" rel="noopener">SRoolsKing 2.0</a></li><li><a href="https://www.youtube.com/@FTBVision" target="_blank" rel="noopener">FTB</a></li><li><a href="https://www.twitch.tv/sroolsking" target="_blank" rel="noopener">Twitch</a></li><li><a href="https://streamlabs.com/sroolsking/tip" target="_blank" rel="noopener">Tip me</a></li></ul></div>
-        <div><h4>Games</h4><ul><li><a href="roblox.html">All my Roblox games</a></li><li><a href="https://www.roblox.com/games/127633247396147" target="_blank" rel="noopener">Get Rich Building Stairs</a></li><li><a href="https://www.roblox.com/games/107417157677118" target="_blank" rel="noopener">Build Your Soccer Empire</a></li><li><a href="https://www.roblox.com/games/13160412552" target="_blank" rel="noopener">Ultimate Mansion Tycoon</a></li><li><a href="https://www.roblox.com/games/9305786774" target="_blank" rel="noopener">Ultimate Modern House Tycoon 2</a></li><li><a href="https://www.roblox.com/games/6709868855" target="_blank" rel="noopener">Ultimate House Tycoon</a></li><li><a href="https://www.roblox.com/games/119069636768315" target="_blank" rel="noopener">Billionaire House Tycoon</a></li></ul></div>
+        <div><h4>Games</h4><ul><li><a href="roblox.html">All my Roblox games</a></li><li><a href="https://www.roblox.com/games/119069636768315" target="_blank" rel="noopener">Billionaire House Tycoon</a></li><li><a href="https://www.roblox.com/games/127633247396147" target="_blank" rel="noopener">Get Rich Building Stairs</a></li><li><a href="https://www.roblox.com/games/107417157677118" target="_blank" rel="noopener">Build Your Soccer Empire</a></li><li><a href="https://www.roblox.com/games/13160412552" target="_blank" rel="noopener">Ultimate Mansion Tycoon</a></li><li><a href="https://www.roblox.com/games/9305786774" target="_blank" rel="noopener">Ultimate Modern House Tycoon 2</a></li><li><a href="https://www.roblox.com/games/6709868855" target="_blank" rel="noopener">Ultimate House Tycoon</a></li></ul></div>
         <div><h4>Studios &amp; brands</h4><ul><li><a href="https://www.roblox.com/groups/11451117/Golden-Eagle-Studios" target="_blank" rel="noopener">Golden Eagle Studios</a></li><li><a href="https://www.roblox.com/groups/33416908/Peregrine-Falcon-Studios" target="_blank" rel="noopener">Peregrine Falcon Studios</a></li><li><a href="https://www.roblox.com/communities/1029795470/simple-games-for-simple-people" target="_blank" rel="noopener">Simple Games for Simple People</a></li><li><a href="https://shophonneur.com/" target="_blank" rel="noopener">Honneur · clothing brand</a></li></ul></div>
       </div>
       <div class="foot-bottom"><span>© 2026 SRoolsKing. All rights reserved.</span><span>sroolsking.com</span></div>
@@ -425,6 +467,27 @@ body{background:var(--light);color:var(--ink)}
 <script>
 (function(){
   var root = document.getElementById("srk");
+  root.classList.add("js");
+  var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* Scroll: sections rise in as they enter view (staggered), a progress bar tracks the page, the hero image drifts. */
+  var rv = Array.prototype.slice.call(root.querySelectorAll(".head, .card, .tile, .stat, .vids>div, .split, .two .copy, .links, .group, .btns.center, .foot>div"));
+  if (!calm && "IntersectionObserver" in window){
+    rv.forEach(function(el){ el.classList.add("rv"); var sibs = Array.prototype.filter.call(el.parentNode.children, function(c){ return c.classList.contains("rv") || c === el; }); el.style.setProperty("--d", Math.min(sibs.indexOf(el), 5) * 80 + "ms"); });
+    var rio = new IntersectionObserver(function(es){ es.forEach(function(e){ if (!e.isIntersecting) return; var el = e.target; rio.unobserve(el); el.classList.add("in"); setTimeout(function(){ el.classList.remove("rv", "in"); el.style.removeProperty("--d"); }, 1300); }); }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+    rv.forEach(function(el){ rio.observe(el); });
+  }
+  var bar = root.querySelector(".progress"), hbg = root.querySelector(".hero-bg"), tick = false;
+  function onScroll(){ tick = false; var y = window.scrollY, max = document.documentElement.scrollHeight - window.innerHeight; if (bar) bar.style.transform = "scaleX(" + (max > 0 ? Math.min(1, y / max) : 0) + ")"; if (hbg && !calm && y < 900) hbg.style.transform = "translateY(" + y * 0.18 + "px) scale(1.04)"; }
+  window.addEventListener("scroll", function(){ if (!tick){ tick = true; requestAnimationFrame(onScroll); } }, { passive: true }); onScroll();
+  /* React: cards tilt toward the cursor, stat cards glow under it, buttons ripple where they are pressed. */
+  if (!calm && window.matchMedia("(hover: hover) and (pointer: fine)").matches){
+    root.querySelectorAll(".card, .tile").forEach(function(el){
+      el.addEventListener("pointermove", function(e){ if (el.classList.contains("rv")) return; var r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5, k = Math.min(1, 520 / r.width); x *= k; y *= k; el.classList.add("tilt"); el.style.transition = "transform .08s linear, box-shadow .2s"; el.style.transform = "perspective(900px) rotateX(" + (-y * 5).toFixed(2) + "deg) rotateY(" + (x * 6).toFixed(2) + "deg) translateY(-4px)"; });
+      el.addEventListener("pointerleave", function(){ el.style.transition = "transform .45s cubic-bezier(.2,.7,.2,1), box-shadow .2s"; el.style.transform = ""; });
+    });
+    root.querySelectorAll(".stat").forEach(function(el){ el.addEventListener("pointermove", function(e){ var r = el.getBoundingClientRect(); el.style.setProperty("--mx", (e.clientX - r.left) + "px"); el.style.setProperty("--my", (e.clientY - r.top) + "px"); }); });
+  }
+  if (!calm) root.querySelectorAll(".pill").forEach(function(el){ el.addEventListener("pointerdown", function(e){ var r = el.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2, s = document.createElement("span"); s.className = "ripple"; s.style.width = s.style.height = d + "px"; s.style.left = (e.clientX - r.left - d / 2) + "px"; s.style.top = (e.clientY - r.top - d / 2) + "px"; el.appendChild(s); setTimeout(function(){ s.remove(); }, 600); }); });
   root.querySelectorAll(".opt").forEach(function(el){ el.addEventListener("touchstart", function(){ el.classList.add("show-opt"); setTimeout(function(){ el.classList.remove("show-opt"); }, 1500); }, {passive:true}); });
   var OWN = [10767645246, 10345791932, 2101240674, 4592957519, 3482493471, 4201850178, 2533980161, 9530317138, 2838525435, 1863305565, 3250974283, 3291101795], WORKED = [3746418487];
   var YT_ID = "UCxVNuXOtvIn214EDRwgAgPQ", YT2_ID = "UCqcC3xK1ZJtHaY0Vwz7sTZg", FTB_ID = "UC8OVbnfqSap98PcS69iWfgg", YT_API_KEY = "";   /* optional: a YouTube Data API key makes the YouTube numbers official */
