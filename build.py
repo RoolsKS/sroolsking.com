@@ -317,6 +317,18 @@ body{background:var(--light);color:var(--ink)}
 #srk .btns.center{justify-content:center;margin-top:36px}
 #srk .liv{display:none;font:700 10px/1 var(--body);letter-spacing:1.5px;padding:4px 7px;border-radius:999px;background:#C8102E;color:#fff;vertical-align:middle;margin-left:10px}
 #srk .liv.on{display:inline-block}
+/* Live indicators: only shown while the Twitch stream is on */
+@keyframes srk-pulse{0%{box-shadow:0 0 0 0 rgba(255,59,59,.7)}70%{box-shadow:0 0 0 9px rgba(255,59,59,0)}100%{box-shadow:0 0 0 0 rgba(255,59,59,0)}}
+#srk .ldot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#FF3B3B;animation:srk-pulse 1.6s infinite;flex:none}
+#srk .livenav{display:inline-flex;align-items:center;gap:7px;margin-left:auto;margin-right:4px;padding:8px 13px;border-radius:999px;border:1.5px solid rgba(255,59,59,.55);background:rgba(255,59,59,.12);color:#fff;font:800 12px/1 var(--body);letter-spacing:1.6px}
+#srk .livenav:hover{background:rgba(255,59,59,.22)}
+#srk .livenav[hidden],#srk .live-btn[hidden]{display:none}
+#srk .livenav:not([hidden])~.pill.tip{margin-left:6px}
+#srk .pill.live-btn{background:#E5252A;color:#fff}
+#srk .pill.live-btn:hover{background:#FF3B3B;box-shadow:0 10px 24px rgba(229,37,42,.4)}
+#srk .pill.live-btn .ldot{background:#fff;animation-name:srk-pulse-w}
+@keyframes srk-pulse-w{0%{box-shadow:0 0 0 0 rgba(255,255,255,.8)}70%{box-shadow:0 0 0 8px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+#srk .fab.is-live{background:#E5252A;color:#fff}
 
 /* Contact */
 #srk .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:56px;align-items:center}
@@ -365,6 +377,7 @@ body{background:var(--light);color:var(--ink)}
   #srk .nav ul a{display:inline-block;padding-block:8px}
   #srk section[id],#srk header[id]{scroll-margin-top:128px}
   #srk .nav .pill.tip{display:none}
+  #srk .livenav:not([hidden])~.pill{display:none}
   #srk .nav .pill{margin-left:auto}
   #srk .topbar .tb-right{display:none}
   #srk .hero-in{padding-block:64px 44px}
@@ -423,6 +436,7 @@ def nav(links, cta_href, cta_html, home="#top"):
     return f'''  <nav class="nav" aria-label="Main"><div class="container">
     <a class="brand" href="{home}">{HAT}<span><b>SROOLSKING</b><small>MEDIA · GAMES</small></span></a>
     <ul>{lis}</ul>
+    <a class="livenav" href="{TW["url"]}"{EXT} hidden><span class="ldot" aria-hidden="true"></span>LIVE</a>
     <a class="pill line tip opt" data-opt="Optional" title="Optional" href="https://streamlabs.com/sroolsking/tip"{EXT}><svg viewBox="0 0 24 24" aria-hidden="true">{ICONS["Tip"]}</svg> Tip me</a>
     <a class="pill" href="{cta_href}"{EXT}>{cta_html}</a>
   </div></nav>'''
@@ -501,7 +515,8 @@ def footer():
   </footer>'''
 
 # ---------- home: socials first ----------
-home_btns = f'''        <a class="pill" href="{YT["url"]}"{EXT}>{yt_icon} Subscribe on YouTube</a>
+home_btns = f'''        <a class="pill live-btn" href="{TW["url"]}"{EXT} hidden><span class="ldot" aria-hidden="true"></span>Watch live now</a>
+        <a class="pill" href="{YT["url"]}"{EXT}>{yt_icon} Subscribe on YouTube</a>
         <a class="pill line" href="{TW["url"]}"{EXT}>{tw_icon} Follow on Twitch</a>
         <a class="pill line" href="{DISCORD}"{EXT}>{dc_icon} Join the Discord</a>'''
 home_trust = f'''        <li>{CHECK}More than three YouTube channels</li>
@@ -592,7 +607,8 @@ HOME_BODY = f'''<div id="srk">
 </div>'''
 
 # ---------- roblox: the games ----------
-rbx_btns = f'''        <a class="pill" href="{LATEST_URL}"{EXT}>Play the latest {ARROW_SVG}</a>
+rbx_btns = f'''        <a class="pill live-btn" href="{TW["url"]}"{EXT} hidden><span class="ldot" aria-hidden="true"></span>Watch live now</a>
+        <a class="pill" href="{LATEST_URL}"{EXT}>Play the latest {ARROW_SVG}</a>
         <a class="pill line" href="{YT["url"]}"{EXT}>{yt_icon} Watch on YouTube</a>
         <a class="pill line" href="{DISCORD}"{EXT}>{dc_icon} Join the Discord</a>'''
 rbx_trust = f'''        <li>{CHECK}Founder of five studios and brands</li>
@@ -779,10 +795,13 @@ JS = r"""
   });
 
   /* Twitch: follower count and live status via DecAPI. */
-  if (q("#tw-followers")){
-    get("https://decapi.me/twitch/followcount/" + TW_LOGIN, true).then(function(t){ if (t && /^\d+$/.test(t.trim())) set("#tw-followers", t.trim()); });
+  if (q("#tw-followers")) get("https://decapi.me/twitch/followcount/" + TW_LOGIN, true).then(function(t){ if (t && /^\d+$/.test(t.trim())) set("#tw-followers", t.trim()); });
+  {
     get("https://decapi.me/twitch/uptime/" + TW_LOGIN, true).then(function(t){
       if (!t || /offline|error|not found/i.test(t)) return;
+      /* Live: show the LIVE pill in the menu and the "Watch live now" button, and turn the floating button into a live link. */
+      root.querySelectorAll(".livenav, .live-btn").forEach(function(el){ el.hidden = false; });
+      var fab = q(".fab"); if (fab){ fab.classList.add("is-live"); fab.href = "https://www.twitch.tv/" + TW_LOGIN; fab.innerHTML = '<span class="ldot" style="background:#fff"></span> Watch live'; }
       var tl = q("#tw-live"); if (tl) tl.classList.add("on");
       var up = q("#tw-uptime"); if (up){ up.hidden = false; up.textContent = "live for " + t.trim(); }
     });
