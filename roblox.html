@@ -174,7 +174,8 @@ body{background:var(--light);color:var(--ink)}
 /* Stats band */
 #srk .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 #srk .stat{background:var(--navy2);border:1px solid var(--line-dark);border-radius:16px;padding:28px 24px;text-align:center;display:flex;flex-direction:column;gap:8px}
-#srk .stat b{font:700 clamp(36px,4.4vw,56px)/1 var(--head);color:var(--sky);font-variant-numeric:tabular-nums}
+#srk .stat{container-type:inline-size}
+#srk .stat b{font:700 min(56px,calc(200cqi / var(--n,7)))/1 var(--head);color:var(--sky);font-variant-numeric:tabular-nums;white-space:nowrap;min-width:0!important}
 #srk .stat span{font:600 12.5px var(--body);letter-spacing:2px;text-transform:uppercase;color:var(--hero-muted)}
 #srk .split{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 32px;margin-top:26px;font-size:14px;color:var(--hero-muted)}
 #srk .split b{color:#fff;font-weight:600;font-variant-numeric:tabular-nums}
@@ -526,12 +527,13 @@ body{background:var(--light);color:var(--ink)}
       el._raf = k < 1 ? requestAnimationFrame(step) : null;
     })(t0);
   }
-  function setEl(el, v){ if (!el || v == null) return; v = Math.round(Number(v)); if (isNaN(v)) return; el.dataset.target = v; if (el._shown) countTo(el, v, 900); }
+  function fit(el, v){ el.style.setProperty("--n", Math.max(7, (el.dataset.plain ? String(v) : fmt(v)).length)); }
+  function setEl(el, v){ if (!el || v == null) return; v = Math.round(Number(v)); if (isNaN(v)) return; fit(el, v); el.dataset.target = v; if (el._shown) countTo(el, v, 900); }
   function set(sel, v){ setEl(q(sel), v); }
   var nums = Array.prototype.slice.call(root.querySelectorAll(".stat b, .nums b, .stats-l b, .split b, #h-visits, #h-visits2"));
   nums.forEach(function(el){
     var v = parseInt((el.textContent || "").replace(/[^\d]/g, ""), 10); if (isNaN(v)){ el._shown = true; return; }
-    el.dataset.target = v;
+    el.dataset.target = v; fit(el, v);
     var w = el.getBoundingClientRect().width; if (w){ el.style.minWidth = w + "px"; el.style.display = "inline-block"; }
     if (el.id === "h-visits" || el.id === "h-visits2") el.style.textAlign = "right";
     if (!reduce){ el.textContent = "0"; el.classList.add("sk"); }
